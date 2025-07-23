@@ -1,2 +1,2 @@
-# theory
+# Music Theory
 Music Theory Resources
