@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Terms Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            position: relative; /* Needed for absolute positioning of footer if desired, but not strictly for this design */
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        .score-counter {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: right;
+            padding-right: 10px;
+        }
+        .question-section {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        .option-button {
+            background-color: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            word-wrap: break-word;
+        }
+        .option-button:hover {
+            background-color: #dbe4e8;
+            border-color: #95a5a6;
+        }
+        .option-button.selected {
+            background-color: #a2d9ce;
+            border-color: #1abc9c;
+            font-weight: 600;
+        }
+        .option-button.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+            font-weight: 600;
+        }
+        .option-button.incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            font-weight: 600;
+        }
+        .feedback-message {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .feedback-correct {
+            background-color: #e6ffe6;
+            color: #28a745;
+        }
+        .feedback-incorrect {
+            background-color: #ffe6e6;
+            color: #dc3545;
+        }
+        .navigation-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .nav-button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+            flex-grow: 1;
+        }
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+        .nav-button:disabled {
+            background-color: #b0c4de;
+            cursor: not-allowed;
+        }
+        .submit-button {
+            background-color: #2ecc71;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+            flex-grow: 1;
+        }
+        .submit-button:hover {
+            background-color: #27ae60;
+        }
+        .submit-button:disabled {
+            background-color: #a9dfbf;
+            cursor: not-allowed;
+        }
+        .score-section {
+            margin-top: 30px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .score-section button {
+            margin-top: 20px;
+            background-color: #f39c12;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+        .score-section button:hover {
+            background-color: #e67e22;
+        }
+
+        .quiz-settings {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+        }
+
+        .quiz-settings label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #34495e;
+            margin-right: 10px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .quiz-settings .setting-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .quiz-settings .setting-group label {
+            margin-bottom: 0; /* Override default block label margin */
+        }
+
+
+        .quiz-settings input[type="number"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 80px;
+            text-align: center;
+        }
+
+        .grade-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grade-checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e0e7eb;
+            border: 1px solid #c0cdd4;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .grade-checkbox-container:hover {
+            background-color: #d0d7db;
+        }
+
+        .grade-checkbox-container input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+
+        .grade-checkbox-container.selected-grade {
+            background-color: #a2d9ce;
+            border-color: #1abc9c;
+        }
+
+        .max-questions-checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            cursor: pointer;
+            background-color: #e0e7eb;
+            border: 1px solid #c0cdd4;
+            border-radius: 8px;
+            padding: 8px 15px;
+            transition: background-color 0.2s ease;
+        }
+        .max-questions-checkbox-container:hover {
+            background-color: #d0d7db;
+        }
+        .max-questions-checkbox-container.selected-option {
+            background-color: #a2d9ce;
+            border-color: #1abc9c;
+        }
+        .max-questions-checkbox-container input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+
+
+        .start-button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+            margin-top: 20px;
+        }
+        .start-button:hover {
+            background-color: #2980b9;
+        }
+
+        .quiz-footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #777;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .question-text {
+                font-size: 1.3rem;
+            }
+            .option-button {
+                font-size: 1rem;
+                padding: 12px 15px;
+            }
+            .navigation-buttons {
+                flex-direction: column;
+            }
+            .nav-button, .submit-button, .start-button {
+                width: 100%;
+            }
+            .grade-selection-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            }
+            .quiz-settings .setting-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .max-questions-checkbox-container {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Foreign Music Terms Quiz</h1>
+
+        <div id="quiz-settings" class="quiz-settings">
+            <div class="setting-group">
+                <label for="num-questions">Number of Questions:</label>
+                <input type="number" id="num-questions" value="10" min="1" max="50">
+                <label class="max-questions-checkbox-container" id="max-questions-label">
+                    <input type="checkbox" id="max-questions-checkbox">
+                    Max Questions (<span id="max-questions-count">0</span> terms)
+                </label>
+            </div>
+
+            <label>Select Grade Levels:</label>
+            <div class="grade-selection-grid" id="grade-selection-grid">
+                <!-- Grade checkboxes will be inserted here by JavaScript -->
+            </div>
+            <button id="start-quiz-button" class="start-button">Start Quiz</button>
+        </div>
+
+        <div id="quiz-area" class="hidden">
+            <div id="current-score-display" class="score-counter">Score: 0 / 0</div>
+            <div id="quiz-content">
+                <!-- Questions will be loaded here by JavaScript -->
+            </div>
+            <div class="feedback-message" id="feedback"></div>
+            <div class="navigation-buttons">
+                <button id="prev-button" class="nav-button" disabled>Previous</button>
+                <button id="submit-button" class="submit-button">Submit Answer</button>
+                <button id="next-button" class="nav-button" disabled>Next</button>
+            </div>
+            <div id="score-display" class="score-section hidden">
+                <p>You scored <span id="final-score"></span> out of <span id="total-questions"></span>!</p>
+                <button onclick="restartQuiz()">Restart Quiz</button>
+            </div>
+        </div>
+
+        <footer class="quiz-footer">
+            <p>Designed by Hazim Suhadi</p>
+        </footer>
+    </div>
+
+    <script>
+        // Define the music terms and their definitions
+        const musicTerms = [
+            // Grade 1 Italian Terms
+            { term: "a tempo", definition: "In time (i.e. return to the original speed)", grade: 1 },
+            { term: "accelerando (or accel.)", definition: "Gradually getting quicker", grade: 1 },
+            { term: "adagio", definition: "Slow", grade: 1 },
+            { term: "allegretto", definition: "Fairly quick (slower than allegro)", grade: 1 },
+            { term: "allegro", definition: "Quick", grade: 1 },
+            { term: "andante", definition: "At a walking pace", grade: 1 },
+            { term: "cantabile", definition: "In a singing style", grade: 1 },
+            { term: "crescendo (or cresc.)", definition: "Gradually getting louder", grade: 1 },
+            { term: "da capo (or D.C.)", definition: "From the beginning", grade: 1 },
+            { term: "decrescendo (or decresc.)", definition: "Gradually getting softer", grade: 1 },
+            { term: "diminuendo (or dim.)", definition: "Gradually getting softer", grade: 1 },
+            { term: "dolce", definition: "Sweetly", grade: 1 },
+            { term: "f (forte)", definition: "Loud", grade: 1 },
+            { term: "ff (fortissimo)", definition: "Very loud", grade: 1 },
+            { term: "fine, al fine", definition: "The end", grade: 1 },
+            { term: "legato", definition: "Smoothly", grade: 1 },
+            { term: "mf (mezzo forte)", definition: "Moderately loud", grade: 1 },
+            { term: "moderato", definition: "At a moderate speed", grade: 1 },
+            { term: "mp (mezzo piano)", definition: "Moderately quiet", grade: 1 },
+            { term: "p (piano)", definition: "Quiet", grade: 1 },
+            { term: "pp (pianissimo)", definition: "Very quiet", grade: 1 },
+            { term: "rallentando (or rall.)", definition: "Gradually getting slower", grade: 1 },
+            { term: "ritardando (or ritard. or rit.)", definition: "Gradually getting slower", grade: 1 },
+            { term: "staccato (or stacc.)", definition: "Detached", grade: 1 },
+
+            // Grade 2 Italian Terms
+            { term: "alla marcia", definition: "In the style of a march", grade: 2 },
+            { term: "allargando", definition: "Broadening (getting a little slower and louder)", grade: 2 },
+            { term: "con moto", definition: "With movement", grade: 2 },
+            { term: "con, col", definition: "With", grade: 2 },
+            { term: "dal segno (or D.S.)", definition: "From the sign", grade: 2 },
+            { term: "e, ed", definition: "And", grade: 2 },
+            { term: "espressivo (or espress.)", definition: "Expressively", grade: 2 },
+            { term: "grave", definition: "Very slow and solemn", grade: 2 },
+            { term: "grazioso", definition: "Gracefully", grade: 2 },
+            { term: "largo", definition: "Broad, stately (slow)", grade: 2 },
+            { term: "lento", definition: "Slow", grade: 2 },
+            { term: "ma", definition: "But", grade: 2 },
+            { term: "meno", definition: "Less", grade: 2 },
+            { term: "meno mosso", definition: "Less movement (slower)", grade: 2 },
+            { term: "molto", definition: "Very", grade: 2 },
+            { term: "non troppo", definition: "Not too much", grade: 2 },
+            { term: "piu", definition: "More", grade: 2 },
+            { term: "piu mosso", definition: "More movement (quicker)", grade: 2 },
+            { term: "poco, poco a poco", definition: "A little, little by little", grade: 2 },
+            { term: "presto", definition: "Very quick", grade: 2 },
+            { term: "ritenuto (or riten.)", definition: "Held back (immediately slower)", grade: 2 },
+            { term: "senza", definition: "Without", grade: 2 },
+            { term: "vivace, vivo", definition: "Lively, quick", grade: 2 },
+
+            // Grade 3 Italian Terms
+            { term: "agitato", definition: "Agitated", grade: 3 },
+            { term: "andantino", definition: "Slightly quicker than andante", grade: 3 },
+            { term: "animato", definition: "Animated, lively", grade: 3 },
+            { term: "ben", definition: "Well", grade: 3 },
+            { term: "con forza", definition: "With force", grade: 3 },
+            { term: "energico", definition: "Energetic", grade: 3 },
+            { term: "giocoso", definition: "Playful", grade: 3 },
+            { term: "leggero", definition: "Lightly", grade: 3 },
+            { term: "maestoso", definition: "Majestic", grade: 3 },
+            { term: "marcato, marc.", definition: "Marked, emphatic", grade: 3 },
+            { term: "pesante", definition: "Heavy", grade: 3 },
+            { term: "prestissimo", definition: "As quick as possible", grade: 3 },
+            { term: "prima, primo", definition: "First", grade: 3 },
+            { term: "risoluto", definition: "Resolute, firm", grade: 3 },
+            { term: "scherzando", definition: "Playful, joking", grade: 3 },
+            { term: "semplice", definition: "Simple", grade: 3 },
+            { term: "sempre", definition: "Always", grade: 3 },
+            { term: "sforzando, sforzato, sfz, sf", definition: "Forced, accented", grade: 3 },
+            { term: "simile (or sim.)", definition: "In a similar way", grade: 3 },
+            { term: "sostenuto, sost", definition: "Sustained", grade: 3 },
+            { term: "subito, sub.", definition: "Suddenly", grade: 3 },
+            { term: "tranquillo", definition: "Tranquil, calm", grade: 3 },
+            { term: "triste, tristamente", definition: "Sad, sadly", grade: 3 },
+
+            // Grade 4 Italian Terms
+            { term: "affettuoso", definition: "Tenderly", grade: 4 },
+            { term: "alla breve", definition: "With a minim beat (2/2 time)", grade: 4 },
+            { term: "amabile", definition: "Amiable, pleasant", grade: 4 },
+            { term: "appassionato", definition: "Passionately", grade: 4 },
+            { term: "assai", definition: "Very", grade: 4 },
+            { term: "come prima", definition: "As before", grade: 4 },
+            { term: "comodo, tempo comodo", definition: "At a comfortable speed", grade: 4 },
+            { term: "con brio", definition: "With vigour, spirit", grade: 4 },
+            { term: "deciso", definition: "Decisively", grade: 4 },
+            { term: "larghetto", definition: "Fairly slow (slower than andante)", grade: 4 },
+            { term: "mesto", definition: "Sad", grade: 4 },
+            { term: "misterioso", definition: "Mysteriously", grade: 4 },
+            { term: "ritmico", definition: "Rhythmically", grade: 4 },
+
+            // Grade 4 French Terms
+            { term: "animé", definition: "Animated, lively", grade: 4 },
+            { term: "douce", definition: "Sweetly, softly", grade: 4 },
+            { term: "lent", definition: "Slow", grade: 4 },
+            { term: "modéré", definition: "Moderate", grade: 4 },
+            { term: "retenu", definition: "Held back", grade: 4 },
+            { term: "vite", definition: "Quick", grade: 4 },
+
+            // Grade 5 Italian Terms
+            { term: "a niente", definition: "To nothing (dying away)", grade: 5 },
+            { term: "ad libitum, ad lib.", definition: "At choice (e.g. of tempo)", grade: 5 },
+            { term: "attacca", definition: "Go straight on", grade: 5 },
+            { term: "cantando", definition: "Singing", grade: 5 },
+            { term: "con dolore", definition: "With sadness", grade: 5 },
+            { term: "con spirito", definition: "With spirit", grade: 5 },
+            { term: "doloroso", definition: "Sorrowful", grade: 5 },
+            { term: "largamente", definition: "Broadly", grade: 5 },
+            { term: "morendo", definition: "Dying away", grade: 5 },
+            { term: "perdendosi", definition: "Dying away", grade: 5 },
+            { term: "quasi", definition: "As if, almost", grade: 5 },
+            { term: "rinforzando, rf, rfz, rinf.", definition: "Reinforcing", grade: 5 },
+            { term: "smorzando, smorz.", definition: "Dying away", grade: 5 },
+            { term: "sonoro", definition: "Resonant, sonorous", grade: 5 },
+            { term: "sotto voce", definition: "In an undertone", grade: 5 },
+
+            // Grade 5 German Terms
+            { term: "langsam", definition: "Slow", grade: 5 },
+            { term: "lebhaft", definition: "Lively", grade: 5 },
+            { term: "mässig", definition: "Moderate", grade: 5 },
+            { term: "ruhig", definition: "Peaceful", grade: 5 },
+            { term: "schnell", definition: "Quick", grade: 5 },
+            { term: "traurig", definition: "Sad", grade: 5 },
+
+            // Grade 6 Italian Terms
+            { term: "adagietto", definition: "Fairly slow (quicker than adagio)", grade: 6 },
+            { term: "affrettando", definition: "Hurrying", grade: 6 },
+            { term: "amore", definition: "Love", grade: 6 },
+            { term: "a piacere", definition: "At pleasure (i.e. the performer's discretion)", grade: 6 },
+            { term: "calando", definition: "Dying away", grade: 6 },
+            { term: "delicate", definition: "Delicately", grade: 6 },
+            { term: "dolciss. (dolcissimo)", definition: "As sweetly as possible", grade: 6 },
+            { term: "dolente", definition: "Sorrowful", grade: 6 },
+            { term: "giusto", definition: "Proper, strict (e.g. tempo giusto, in strict time)", grade: 6 },
+            { term: "marziale", definition: "In a martial style", grade: 6 },
+            { term: "mezza voce", definition: "With half the voice (i.e. softly)", grade: 6 },
+            { term: "possibile", definition: "Possible", grade: 6 },
+            { term: "prestissimo", definition: "As quick as possible", grade: 6 },
+            { term: "seconda, secondo", definition: "Second", grade: 6 },
+            { term: "soave", definition: "Gentle, mild", grade: 6 },
+            { term: "spiritoso", definition: "With spirit", grade: 6 },
+            { term: "strepitoso", definition: "Noisy, boisterous", grade: 6 },
+            { term: "tanto", definition: "So much", grade: 6 },
+            { term: "teneramente", definition: "Tenderly", grade: 6 },
+            { term: "tenerezza", definition: "Tenderness", grade: 6 },
+            { term: "tenuto", definition: "Held (for its full value)", grade: 6 },
+            { term: "volta", definition: "Time (e.g. prima volta, first time)", grade: 6 },
+
+            // Grade 6 French Terms
+            { term: "a", definition: "To, at", grade: 6 },
+            { term: "avec", definition: "With", grade: 6 },
+            { term: "doux", definition: "Sweet, soft", grade: 6 },
+            { term: "encore", definition: "Still, yet, again", grade: 6 },
+            { term: "et", definition: "And", grade: 6 },
+            { term: "non", definition: "Not", grade: 6 },
+            { term: "peu", definition: "Little", grade: 6 },
+            { term: "plus", definition: "More", grade: 6 },
+            { term: "sans", definition: "Without", grade: 6 },
+            { term: "très", definition: "Very", grade: 6 },
+            { term: "un, une", definition: "A, an", grade: 6 },
+
+            // Grade 6 German Terms
+            { term: "ausdruck, ausdrucksvoll", definition: "Expression, expressively", grade: 6 },
+            { term: "ein", definition: "A, an", grade: 6 },
+            { term: "etwas", definition: "Somewhat", grade: 6 },
+            { term: "geschwind", definition: "Quick", grade: 6 },
+            { term: "langsamer", definition: "Slower", grade: 6 },
+            { term: "mit", definition: "With", grade: 6 },
+            { term: "nicht", definition: "Not", grade: 6 },
+            { term: "ohne", definition: "Without", grade: 6 },
+            { term: "rasch", definition: "Quick", grade: 6 },
+            { term: "sehr", definition: "Very", grade: 6 },
+            { term: "und", definition: "And", grade: 6 },
+            { term: "ziemlich", definition: "Fairly, rather", grade: 6 },
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = []; // To store user's selected option for each question
+        let questions = []; // To store the generated quiz questions
+        let availableTermsForQuiz = []; // Terms filtered by selected grades
+
+        // Function to shuffle an array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Function to generate a single multiple-choice question from availableTermsForQuiz
+        // This function is now simpler as initializeQuiz handles the unique selection
+        function generateQuestion(termObj) {
+            const questionTerm = termObj;
+            const correctAnswer = questionTerm.definition;
+
+            // Collect other random definitions for incorrect options from the *entire* musicTerms list
+            // This ensures variety in incorrect options, even if they are from unselected grades
+            let incorrectAnswers = [];
+            while (incorrectAnswers.length < 3) {
+                const randomTerm = musicTerms[Math.floor(Math.random() * musicTerms.length)];
+                if (randomTerm.definition !== correctAnswer && !incorrectAnswers.includes(randomTerm.definition)) {
+                    incorrectAnswers.push(randomTerm.definition);
+                }
+            }
+
+            // Combine correct and incorrect answers and shuffle them
+            const options = shuffleArray([correctAnswer, ...incorrectAnswers]);
+
+            return {
+                term: questionTerm.term,
+                correctAnswer: correctAnswer,
+                options: options
+            };
+        }
+
+        // Function to initialize the quiz with a set number of questions and selected grades
+        function initializeQuiz() {
+            const numQuestionsInput = document.getElementById('num-questions');
+            const maxQuestionsCheckbox = document.getElementById('max-questions-checkbox');
+            let requestedNumQuestions = parseInt(numQuestionsInput.value, 10);
+
+            const selectedGradeCheckboxes = document.querySelectorAll('.grade-checkbox:checked');
+            const selectedGrades = Array.from(selectedGradeCheckboxes).map(cb => parseInt(cb.value, 10));
+
+            if (selectedGrades.length === 0) {
+                displayMessageBox("Please select at least one grade level to start the quiz.");
+                return;
+            }
+
+            // Filter music terms based on selected grades
+            availableTermsForQuiz = musicTerms.filter(term => selectedGrades.includes(term.grade));
+
+            if (availableTermsForQuiz.length === 0) {
+                displayMessageBox("No terms available for the selected grade levels. Please choose different grades.");
+                return;
+            }
+
+            // Determine the actual number of questions based on settings
+            let actualNumQuestions;
+            if (maxQuestionsCheckbox.checked) {
+                actualNumQuestions = availableTermsForQuiz.length;
+            } else {
+                actualNumQuestions = Math.min(requestedNumQuestions, availableTermsForQuiz.length);
+            }
+            numQuestionsInput.value = actualNumQuestions; // Update input to reflect actual number
+
+            // Shuffle the available terms and take the required number of questions
+            const shuffledTerms = shuffleArray([...availableTermsForQuiz]); // Create a shallow copy to shuffle
+            questions = shuffledTerms.slice(0, actualNumQuestions).map(termObj => generateQuestion(termObj));
+
+
+            userAnswers = Array(actualNumQuestions).fill(null); // Reset user answers
+            score = 0;
+            currentQuestionIndex = 0;
+
+            document.getElementById('quiz-settings').classList.add('hidden');
+            document.getElementById('quiz-area').classList.remove('hidden');
+
+            displayQuestion();
+            updateNavigationButtons();
+            document.getElementById('score-display').classList.add('hidden');
+            updateScoreDisplay(); // Initialize score display
+        }
+
+        // Function to display the current question
+        function displayQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const feedbackElement = document.getElementById('feedback');
+            feedbackElement.style.display = 'none'; // Hide feedback
+
+            if (currentQuestionIndex >= questions.length) {
+                showFinalScore();
+                return;
+            }
+
+            const currentQuestion = questions[currentQuestionIndex];
+            let optionsHtml = '';
+            currentQuestion.options.forEach((option, index) => {
+                const isSelected = userAnswers[currentQuestionIndex] === option;
+                optionsHtml += `
+                    <button class="option-button ${isSelected ? 'selected' : ''}"
+                            data-option="${option}"
+                            onclick="selectOption(this, '${option}')">
+                        ${option}
+                    </button>
+                `;
+            });
+
+            quizContent.innerHTML = `
+                <div class="question-section">
+                    <p class="question-text">What is the definition of: <strong>${currentQuestion.term}</strong>?</p>
+                    <div class="options-grid">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+            updateNavigationButtons();
+            highlightSelectedOption(); // Re-highlight if already answered
+            disableOptionsIfAnswered(); // Disable options if already answered
+            updateScoreDisplay(); // Update score display when question changes
+        }
+
+        // Function to handle option selection
+        function selectOption(button, selectedOption) {
+            // Remove 'selected' class from all options for this question
+            const buttons = document.querySelectorAll('.option-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+
+            // Add 'selected' class to the clicked button
+            button.classList.add('selected');
+            userAnswers[currentQuestionIndex] = selectedOption; // Store the selected answer
+            document.getElementById('submit-button').disabled = false; // Enable submit button
+        }
+
+        // Function to highlight the selected option if it exists
+        function highlightSelectedOption() {
+            const selectedOption = userAnswers[currentQuestionIndex];
+            if (selectedOption) {
+                const buttons = document.querySelectorAll('.option-button');
+                buttons.forEach(btn => {
+                    if (btn.dataset.option === selectedOption) {
+                        btn.classList.add('selected');
+                    }
+                });
+            }
+        }
+
+        // Function to disable options and show correct/incorrect if already answered
+        function disableOptionsIfAnswered() {
+            if (userAnswers[currentQuestionIndex] !== null) {
+                const buttons = document.querySelectorAll('.option-button');
+                const currentQuestion = questions[currentQuestionIndex];
+                buttons.forEach(btn => {
+                    btn.disabled = true; // Disable all options
+                    if (btn.dataset.option === currentQuestion.correctAnswer) {
+                        btn.classList.add('correct');
+                    } else if (btn.dataset.option === userAnswers[currentQuestionIndex]) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+                document.getElementById('submit-button').disabled = true; // Disable submit button after answer
+            }
+        }
+
+
+        // Function to submit the answer and provide feedback
+        function submitAnswer() {
+            const selectedOption = userAnswers[currentQuestionIndex];
+            const currentQuestion = questions[currentQuestionIndex];
+            const feedbackElement = document.getElementById('feedback');
+
+            if (selectedOption === null) {
+                feedbackElement.textContent = "Please select an answer before submitting.";
+                feedbackElement.className = 'feedback-message feedback-incorrect'; // Use incorrect style for warning
+                feedbackElement.style.display = 'block';
+                return;
+            }
+
+            // Check if the answer has already been evaluated for this question
+            // This prevents score from incrementing multiple times if user navigates back and resubmits
+            if (questions[currentQuestionIndex].answeredCorrectly === undefined) {
+                if (selectedOption === currentQuestion.correctAnswer) {
+                    feedbackElement.textContent = "Correct! Well done!";
+                    feedbackElement.className = 'feedback-message feedback-correct';
+                    score++;
+                    questions[currentQuestionIndex].answeredCorrectly = true; // Mark as answered correctly
+                } else {
+                    feedbackElement.textContent = `Incorrect. The correct answer was: "${currentQuestion.correctAnswer}".`;
+                    feedbackElement.className = 'feedback-message feedback-incorrect';
+                    questions[currentQuestionIndex].answeredCorrectly = false; // Mark as answered incorrectly
+                }
+            } else {
+                // If already answered, just show the previous feedback without changing score
+                if (questions[currentQuestionIndex].answeredCorrectly) {
+                    feedbackElement.textContent = "Correct! Well done!";
+                    feedbackElement.className = 'feedback-message feedback-correct';
+                } else {
+                    feedbackElement.textContent = `Incorrect. The correct answer was: "${currentQuestion.correctAnswer}".`;
+                    feedbackElement.className = 'feedback-message feedback-incorrect';
+                }
+            }
+
+
+            feedbackElement.style.display = 'block';
+
+            // Highlight correct/incorrect options
+            const buttons = document.querySelectorAll('.option-button');
+            buttons.forEach(btn => {
+                if (btn.dataset.option === currentQuestion.correctAnswer) {
+                    btn.classList.add('correct');
+                } else if (btn.dataset.option === selectedOption) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            document.getElementById('submit-button').disabled = true; // Disable submit button after answer
+            updateNavigationButtons(); // Update button states
+            updateScoreDisplay(); // Update score display after submission
+        }
+
+        // Function to navigate to the next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+                document.getElementById('submit-button').disabled = (userAnswers[currentQuestionIndex] === null); // Enable/disable submit based on if already answered
+            } else {
+                showFinalScore();
+            }
+            updateNavigationButtons();
+            updateScoreDisplay(); // Update score display when navigating
+        }
+
+        // Function to navigate to the previous question
+        function prevQuestion() {
+            currentQuestionIndex--;
+            if (currentQuestionIndex >= 0) {
+                displayQuestion();
+                document.getElementById('submit-button').disabled = true; // Always disable submit when going back, unless re-selected
+            }
+            updateNavigationButtons();
+            updateScoreDisplay(); // Update score display when navigating
+        }
+
+        // Function to update navigation button states
+        function updateNavigationButtons() {
+            const prevButton = document.getElementById('prev-button');
+            const nextButton = document.getElementById('next-button');
+            const submitButton = document.getElementById('submit-button');
+
+            prevButton.disabled = currentQuestionIndex === 0;
+            // Next button is enabled if an answer has been selected for the current question OR if it's the last question and an answer has been selected
+            nextButton.disabled = (userAnswers[currentQuestionIndex] === null && currentQuestionIndex < questions.length - 1) || (currentQuestionIndex === questions.length - 1 && userAnswers[currentQuestionIndex] === null);
+            submitButton.disabled = (userAnswers[currentQuestionIndex] !== null && questions[currentQuestionIndex].answeredCorrectly !== undefined); // Disable if already answered and evaluated
+
+            if (currentQuestionIndex === questions.length - 1 && userAnswers[currentQuestionIndex] !== null) {
+                nextButton.disabled = false; // Allow going to score page
+                nextButton.textContent = "Finish Quiz";
+            } else if (currentQuestionIndex < questions.length - 1) {
+                nextButton.textContent = "Next";
+            }
+        }
+
+        // Function to update the current score display
+        function updateScoreDisplay() {
+            document.getElementById('current-score-display').textContent = `Score: ${score} / ${questions.length}`;
+        }
+
+        // Function to show the final score
+        function showFinalScore() {
+            document.getElementById('quiz-content').innerHTML = ''; // Clear quiz content
+            document.getElementById('feedback').style.display = 'none'; // Hide feedback
+            document.getElementById('prev-button').style.display = 'none';
+            document.getElementById('submit-button').style.display = 'none';
+            document.getElementById('next-button').style.display = 'none';
+            document.getElementById('current-score-display').style.display = 'none'; // Hide current score display
+
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('total-questions').textContent = questions.length;
+            document.getElementById('score-display').classList.remove('hidden');
+        }
+
+        // Function to restart the quiz
+        function restartQuiz() {
+            document.getElementById('quiz-settings').classList.remove('hidden');
+            document.getElementById('quiz-area').classList.add('hidden');
+            document.getElementById('prev-button').style.display = 'inline-block';
+            document.getElementById('submit-button').style.display = 'inline-block';
+            document.getElementById('next-button').style.display = 'inline-block';
+            document.getElementById('current-score-display').style.display = 'block'; // Show current score display
+            // Clear selected grades for next session
+            document.querySelectorAll('.grade-checkbox').forEach(cb => {
+                cb.checked = true; // Default back to all grades selected
+                cb.parentElement.classList.add('selected-grade');
+            });
+            // Reset max questions checkbox and number input
+            document.getElementById('max-questions-checkbox').checked = false;
+            document.getElementById('max-questions-label').classList.remove('selected-option');
+            document.getElementById('num-questions').disabled = false;
+            document.getElementById('num-questions').value = 10; // Reset to default number
+            updateMaxQuestionsCount(); // Update the count displayed for max questions
+        }
+
+        // Custom message box function (replaces alert)
+        function displayMessageBox(message) {
+            const messageBox = document.createElement('div');
+            messageBox.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #fff;
+                padding: 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                text-align: center;
+                font-size: 1.1rem;
+                color: #333;
+                max-width: 90%;
+            `;
+            messageBox.innerHTML = `
+                <p>${message}</p>
+                <button style="margin-top: 20px; padding: 10px 20px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="this.parentElement.remove()">OK</button>
+            `;
+            document.body.appendChild(messageBox);
+        }
+
+
+        // Function to populate grade checkboxes
+        function populateGradeCheckboxes() {
+            const gradeGrid = document.getElementById('grade-selection-grid');
+            for (let i = 1; i <= 6; i++) {
+                const container = document.createElement('label');
+                container.className = 'grade-checkbox-container';
+                container.innerHTML = `
+                    <input type="checkbox" class="grade-checkbox" value="${i}">
+                    Grade ${i}
+                `;
+                const checkbox = container.querySelector('.grade-checkbox');
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        container.classList.add('selected-grade');
+                    } else {
+                        container.classList.remove('selected-grade');
+                    }
+                    updateMaxQuestionsCount(); // Update max questions count when grades change
+                });
+                gradeGrid.appendChild(container);
+            }
+        }
+
+        // Function to update the displayed count for "Max Questions"
+        function updateMaxQuestionsCount() {
+            const selectedGradeCheckboxes = document.querySelectorAll('.grade-checkbox:checked');
+            const selectedGrades = Array.from(selectedGradeCheckboxes).map(cb => parseInt(cb.value, 10));
+            const termsInSelectedGrades = musicTerms.filter(term => selectedGrades.includes(term.grade));
+            document.getElementById('max-questions-count').textContent = termsInSelectedGrades.length;
+
+            // Also update the max attribute of the number input
+            document.getElementById('num-questions').max = termsInSelectedGrades.length;
+
+            // If max questions checkbox is checked, update the number input value
+            if (document.getElementById('max-questions-checkbox').checked) {
+                document.getElementById('num-questions').value = termsInSelectedGrades.length;
+            }
+        }
+
+
+        // Event listeners for navigation buttons
+        document.getElementById('prev-button').addEventListener('click', prevQuestion);
+        document.getElementById('next-button').addEventListener('click', nextQuestion);
+        document.getElementById('submit-button').addEventListener('click', submitAnswer);
+        document.getElementById('start-quiz-button').addEventListener('click', initializeQuiz);
+
+        // Event listener for Max Questions checkbox
+        document.getElementById('max-questions-checkbox').addEventListener('change', function() {
+            const numQuestionsInput = document.getElementById('num-questions');
+            const maxQuestionsLabel = document.getElementById('max-questions-label');
+            if (this.checked) {
+                numQuestionsInput.disabled = true;
+                maxQuestionsLabel.classList.add('selected-option');
+                updateMaxQuestionsCount(); // Set value to max available terms
+            } else {
+                numQuestionsInput.disabled = false;
+                maxQuestionsLabel.classList.remove('selected-option');
+                numQuestionsInput.value = 10; // Reset to a default value when unchecked
+            }
+        });
+
+        // Initialize grade checkboxes and max questions count on load
+        window.onload = () => {
+            populateGradeCheckboxes();
+            // Set default selected grades (e.g., all grades)
+            document.querySelectorAll('.grade-checkbox').forEach(cb => {
+                cb.checked = true;
+                cb.parentElement.classList.add('selected-grade');
+            });
+            updateMaxQuestionsCount(); // Initial calculation of max terms
+        };
+
+    </script>
+</body>
+</html>
