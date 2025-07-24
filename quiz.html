@@ -354,6 +354,8 @@
     Thanks to Vincent Wiguna for bugfinding!</p>
         </footer>
     </div>
+    <audio id="correct-sound" src="https://github.com/hazimrsuhadi/theory/blob/main/sound/correct.mp3?raw=true"></audio>
+<audio id="incorrect-sound" src="https://github.com/hazimrsuhadi/theory/blob/main/sound/wrong.mp3?raw=true"></audio>
     <script>
         // ---- DATA ----
         const musicTerms = [
@@ -782,6 +784,8 @@ function generateQuestion(termObj) {
             const currentQuestion = questions[currentQuestionIndex];
             const selectedOption = currentQuestion.options[selectedIndex];
             const feedbackElement = document.getElementById('feedback');
+            const correctSound = document.getElementById('correct-sound');
+            const incorrectSound = document.getElementById('incorrect-sound');
             if (selectedIndex === null || selectedIndex === undefined) {
                 feedbackElement.textContent = "Please select an answer before submitting.";
                 feedbackElement.className = 'feedback-message feedback-incorrect';
@@ -794,10 +798,14 @@ function generateQuestion(termObj) {
                     feedbackElement.className = 'feedback-message feedback-correct';
                     score++;
                     questions[currentQuestionIndex].answeredCorrectly = true;
+                    correctSound.currentTime = 0; // rewind to start
+                    correctSound.play();
                 } else {
                     feedbackElement.textContent = `Incorrect. The correct answer was: "${currentQuestion.correctAnswer}".`;
                     feedbackElement.className = 'feedback-message feedback-incorrect';
                     questions[currentQuestionIndex].answeredCorrectly = false;
+                    incorrectSound.currentTime = 0;
+                    incorrectSound.play();
                 }
             } else {
                 if (questions[currentQuestionIndex].answeredCorrectly) {
