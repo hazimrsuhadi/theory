@@ -27,7 +27,7 @@
             width: 100%;
             text-align: center;
             box-sizing: border-box;
-            position: relative; /* Needed for absolute positioning of footer if desired, but not strictly for this design */
+            position: relative;
         }
         h1 {
             font-size: 2.5rem;
@@ -192,10 +192,8 @@
             gap: 10px;
         }
         .quiz-settings .setting-group label {
-            margin-bottom: 0; /* Override default block label margin */
+            margin-bottom: 0;
         }
-
-
         .quiz-settings input[type="number"] {
             padding: 8px 12px;
             border: 1px solid #ccc;
@@ -206,11 +204,11 @@
         }
 
         .grade-selection-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Always 4 columns on desktop */
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
         .grade-checkbox-container {
             display: flex;
@@ -286,7 +284,8 @@
             border-top: 1px solid #eee;
         }
 
-        /* Responsive adjustments */
+        .hidden { display: none !important; }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2rem;
@@ -305,7 +304,7 @@
                 width: 100%;
             }
             .grade-selection-grid {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                 grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
             }
             .quiz-settings .setting-group {
                 flex-direction: column;
@@ -321,7 +320,6 @@
 <body>
     <div class="quiz-container">
         <h1>Foreign Music Terms Quiz</h1>
-
         <div id="quiz-settings" class="quiz-settings">
             <div class="setting-group">
                 <label for="num-questions">Number of Questions:</label>
@@ -331,19 +329,15 @@
                     Max Questions (<span id="max-questions-count">0</span> terms)
                 </label>
             </div>
-
             <label>Select Grade Levels:</label>
             <div class="grade-selection-grid" id="grade-selection-grid">
                 <!-- Grade checkboxes will be inserted here by JavaScript -->
             </div>
             <button id="start-quiz-button" class="start-button">Start Quiz</button>
         </div>
-
         <div id="quiz-area" class="hidden">
             <div id="current-score-display" class="score-counter">Score: 0 / 0</div>
-            <div id="quiz-content">
-                <!-- Questions will be loaded here by JavaScript -->
-            </div>
+            <div id="quiz-content"></div>
             <div class="feedback-message" id="feedback"></div>
             <div class="navigation-buttons">
                 <button id="prev-button" class="nav-button" disabled>Previous</button>
@@ -355,16 +349,14 @@
                 <button onclick="restartQuiz()">Restart Quiz</button>
             </div>
         </div>
-
         <footer class="quiz-footer">
             <p>Designed by Hazim Suhadi</p>
         </footer>
     </div>
-
     <script>
-        // Define the music terms and their definitions
+        // ---- DATA ----
         const musicTerms = [
-            // Grade 1 Italian Terms
+// Grade 1 Italian Terms
             { term: "a tempo", definition: "In time (i.e. return to the original speed)", grade: 1 },
             { term: "accelerando (or accel.)", definition: "Gradually getting quicker", grade: 1 },
             { term: "adagio", definition: "Slow", grade: 1 },
@@ -629,11 +621,11 @@
 
         let currentQuestionIndex = 0;
         let score = 0;
-        let userAnswers = []; // To store user's selected option for each question
-        let questions = []; // To store the generated quiz questions
-        let availableTermsForQuiz = []; // Terms filtered by selected grades
+        let userAnswers = [];
+        let questions = [];
+        let availableTermsForQuiz = [];
 
-        // Function to shuffle an array
+        // ---- UTILS ----
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -642,14 +634,16 @@
             return array;
         }
 
-        // Function to generate a single multiple-choice question from availableTermsForQuiz
-        // This function is now simpler as initializeQuiz handles the unique selection
-        function generateQuestion(termObj) {
-            const questionTerm = termObj;
-            const correctAnswer = questionTerm.definition;
+        function updateSubmitButtonState() {
+            const submitButton = document.getElementById('submit-button');
+            const selectedIndex = userAnswers[currentQuestionIndex];
+            const alreadySubmitted = questions[currentQuestionIndex]?.answeredCorrectly !== undefined;
+            submitButton.disabled = (selectedIndex === null || selectedIndex === undefined || alreadySubmitted);
+        }
 
-            // Collect other random definitions for incorrect options from the *entire* musicTerms list
-            // This ensures variety in incorrect options, even if they are from unselected grades
+        // ---- QUIZ LOGIC ----
+        function generateQuestion(termObj) {
+            const correctAnswer = termObj.definition;
             let incorrectAnswers = [];
             while (incorrectAnswers.length < 3) {
                 const randomTerm = musicTerms[Math.floor(Math.random() * musicTerms.length)];
@@ -657,18 +651,10 @@
                     incorrectAnswers.push(randomTerm.definition);
                 }
             }
-
-            // Combine correct and incorrect answers and shuffle them
             const options = shuffleArray([correctAnswer, ...incorrectAnswers]);
-
-            return {
-                term: questionTerm.term,
-                correctAnswer: correctAnswer,
-                options: options
-            };
+            return { term: termObj.term, correctAnswer, options };
         }
 
-        // Function to initialize the quiz with a set number of questions and selected grades
         function initializeQuiz() {
             const numQuestionsInput = document.getElementById('num-questions');
             const maxQuestionsCheckbox = document.getElementById('max-questions-checkbox');
@@ -676,71 +662,50 @@
 
             const selectedGradeCheckboxes = document.querySelectorAll('.grade-checkbox:checked');
             const selectedGrades = Array.from(selectedGradeCheckboxes).map(cb => parseInt(cb.value, 10));
-
             if (selectedGrades.length === 0) {
                 displayMessageBox("Please select at least one grade level to start the quiz.");
                 return;
             }
-
-            // Filter music terms based on selected grades
             availableTermsForQuiz = musicTerms.filter(term => selectedGrades.includes(term.grade));
-
             if (availableTermsForQuiz.length === 0) {
                 displayMessageBox("No terms available for the selected grade levels. Please choose different grades.");
                 return;
             }
-
-            // Determine the actual number of questions based on settings
-            let actualNumQuestions;
-            if (maxQuestionsCheckbox.checked) {
-                actualNumQuestions = availableTermsForQuiz.length;
-            } else {
-                actualNumQuestions = Math.min(requestedNumQuestions, availableTermsForQuiz.length);
-            }
-            numQuestionsInput.value = actualNumQuestions; // Update input to reflect actual number
-
-            // Shuffle the available terms and take the required number of questions
-            const shuffledTerms = shuffleArray([...availableTermsForQuiz]); // Create a shallow copy to shuffle
+            let actualNumQuestions = maxQuestionsCheckbox.checked ? availableTermsForQuiz.length : Math.min(requestedNumQuestions, availableTermsForQuiz.length);
+            numQuestionsInput.value = actualNumQuestions;
+            const shuffledTerms = shuffleArray([...availableTermsForQuiz]);
             questions = shuffledTerms.slice(0, actualNumQuestions).map(termObj => generateQuestion(termObj));
-
-
-            userAnswers = Array(actualNumQuestions).fill(null); // Reset user answers
+            userAnswers = Array(actualNumQuestions).fill(null);
             score = 0;
             currentQuestionIndex = 0;
-
             document.getElementById('quiz-settings').classList.add('hidden');
             document.getElementById('quiz-area').classList.remove('hidden');
-
             displayQuestion();
             updateNavigationButtons();
             document.getElementById('score-display').classList.add('hidden');
-            updateScoreDisplay(); // Initialize score display
+            updateScoreDisplay();
         }
 
-        // Function to display the current question
         function displayQuestion() {
             const quizContent = document.getElementById('quiz-content');
             const feedbackElement = document.getElementById('feedback');
-            feedbackElement.style.display = 'none'; // Hide feedback
-
+            feedbackElement.style.display = 'none';
             if (currentQuestionIndex >= questions.length) {
                 showFinalScore();
                 return;
             }
-
             const currentQuestion = questions[currentQuestionIndex];
             let optionsHtml = '';
             currentQuestion.options.forEach((option, index) => {
-                const isSelected = userAnswers[currentQuestionIndex] === option;
+                const isSelected = userAnswers[currentQuestionIndex] === index;
                 optionsHtml += `
                     <button class="option-button ${isSelected ? 'selected' : ''}"
-                            data-option="${option}"
-                            onclick="selectOption(this, '${option}')">
+                            data-option-index="${index}"
+                            onclick="selectOption(this, ${index})">
                         ${option}
                     </button>
                 `;
             });
-
             quizContent.innerHTML = `
                 <div class="question-section">
                     <p class="question-text">What is the definition of: <strong>${currentQuestion.term}</strong>?</p>
@@ -750,82 +715,73 @@
                 </div>
             `;
             updateNavigationButtons();
-            highlightSelectedOption(); // Re-highlight if already answered
-            disableOptionsIfAnswered(); // Disable options if already answered
-            updateScoreDisplay(); // Update score display when question changes
+            highlightSelectedOption();
+            disableOptionsIfAnswered();
+            updateScoreDisplay();
+            updateSubmitButtonState();
         }
 
-        // Function to handle option selection
-        function selectOption(button, selectedOption) {
-            // Remove 'selected' class from all options for this question
+        function selectOption(button, selectedIndex) {
             const buttons = document.querySelectorAll('.option-button');
             buttons.forEach(btn => btn.classList.remove('selected'));
-
-            // Add 'selected' class to the clicked button
             button.classList.add('selected');
-            userAnswers[currentQuestionIndex] = selectedOption; // Store the selected answer
-            document.getElementById('submit-button').disabled = false; // Enable submit button
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            updateSubmitButtonState();
         }
 
-        // Function to highlight the selected option if it exists
         function highlightSelectedOption() {
-            const selectedOption = userAnswers[currentQuestionIndex];
-            if (selectedOption) {
+            const selectedIndex = userAnswers[currentQuestionIndex];
+            if (selectedIndex !== null && selectedIndex !== undefined) {
                 const buttons = document.querySelectorAll('.option-button');
-                buttons.forEach(btn => {
-                    if (btn.dataset.option === selectedOption) {
-                        btn.classList.add('selected');
-                    }
-                });
+                if (buttons[selectedIndex]) {
+                    buttons[selectedIndex].classList.add('selected');
+                }
             }
         }
 
-        // Function to disable options and show correct/incorrect if already answered
         function disableOptionsIfAnswered() {
-            if (userAnswers[currentQuestionIndex] !== null) {
+            const selectedIndex = userAnswers[currentQuestionIndex];
+            if (selectedIndex !== null && selectedIndex !== undefined && questions[currentQuestionIndex]?.answeredCorrectly !== undefined) {
                 const buttons = document.querySelectorAll('.option-button');
                 const currentQuestion = questions[currentQuestionIndex];
-                buttons.forEach(btn => {
-                    btn.disabled = true; // Disable all options
-                    if (btn.dataset.option === currentQuestion.correctAnswer) {
+                buttons.forEach((btn, idx) => {
+                    btn.disabled = true;
+                    if (currentQuestion.options[idx] === currentQuestion.correctAnswer) {
                         btn.classList.add('correct');
-                    } else if (btn.dataset.option === userAnswers[currentQuestionIndex]) {
+                    } else if (idx === selectedIndex) {
                         btn.classList.add('incorrect');
                     }
                 });
-                document.getElementById('submit-button').disabled = true; // Disable submit button after answer
+            } else {
+                // Enable all options for this question if not already answered
+                const buttons = document.querySelectorAll('.option-button');
+                buttons.forEach(btn => btn.disabled = false);
             }
         }
 
-
-        // Function to submit the answer and provide feedback
         function submitAnswer() {
-            const selectedOption = userAnswers[currentQuestionIndex];
+            const selectedIndex = userAnswers[currentQuestionIndex];
             const currentQuestion = questions[currentQuestionIndex];
+            const selectedOption = currentQuestion.options[selectedIndex];
             const feedbackElement = document.getElementById('feedback');
-
-            if (selectedOption === null) {
+            if (selectedIndex === null || selectedIndex === undefined) {
                 feedbackElement.textContent = "Please select an answer before submitting.";
-                feedbackElement.className = 'feedback-message feedback-incorrect'; // Use incorrect style for warning
+                feedbackElement.className = 'feedback-message feedback-incorrect';
                 feedbackElement.style.display = 'block';
                 return;
             }
-
-            // Check if the answer has already been evaluated for this question
-            // This prevents score from incrementing multiple times if user navigates back and resubmits
-            if (questions[currentQuestionIndex].answeredCorrectly === undefined) {
+            if (currentQuestion.answeredCorrectly === undefined) {
                 if (selectedOption === currentQuestion.correctAnswer) {
                     feedbackElement.textContent = "Correct! Well done!";
                     feedbackElement.className = 'feedback-message feedback-correct';
                     score++;
-                    questions[currentQuestionIndex].answeredCorrectly = true; // Mark as answered correctly
+                    questions[currentQuestionIndex].answeredCorrectly = true;
                 } else {
                     feedbackElement.textContent = `Incorrect. The correct answer was: "${currentQuestion.correctAnswer}".`;
                     feedbackElement.className = 'feedback-message feedback-incorrect';
-                    questions[currentQuestionIndex].answeredCorrectly = false; // Mark as answered incorrectly
+                    questions[currentQuestionIndex].answeredCorrectly = false;
                 }
             } else {
-                // If already answered, just show the previous feedback without changing score
                 if (questions[currentQuestionIndex].answeredCorrectly) {
                     feedbackElement.textContent = "Correct! Well done!";
                     feedbackElement.className = 'feedback-message feedback-correct';
@@ -834,109 +790,91 @@
                     feedbackElement.className = 'feedback-message feedback-incorrect';
                 }
             }
-
-
             feedbackElement.style.display = 'block';
-
             // Highlight correct/incorrect options
             const buttons = document.querySelectorAll('.option-button');
-            buttons.forEach(btn => {
-                if (btn.dataset.option === currentQuestion.correctAnswer) {
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (currentQuestion.options[idx] === currentQuestion.correctAnswer) {
                     btn.classList.add('correct');
-                } else if (btn.dataset.option === selectedOption) {
+                } else if (idx === selectedIndex) {
                     btn.classList.add('incorrect');
                 }
             });
-
-            document.getElementById('submit-button').disabled = true; // Disable submit button after answer
-            updateNavigationButtons(); // Update button states
-            updateScoreDisplay(); // Update score display after submission
+            updateSubmitButtonState();
+            updateNavigationButtons();
+            updateScoreDisplay();
         }
 
-        // Function to navigate to the next question
         function nextQuestion() {
             currentQuestionIndex++;
             if (currentQuestionIndex < questions.length) {
                 displayQuestion();
-                document.getElementById('submit-button').disabled = (userAnswers[currentQuestionIndex] === null); // Enable/disable submit based on if already answered
             } else {
                 showFinalScore();
             }
             updateNavigationButtons();
-            updateScoreDisplay(); // Update score display when navigating
+            updateScoreDisplay();
         }
 
-        // Function to navigate to the previous question
         function prevQuestion() {
             currentQuestionIndex--;
             if (currentQuestionIndex >= 0) {
                 displayQuestion();
-                document.getElementById('submit-button').disabled = true; // Always disable submit when going back, unless re-selected
             }
             updateNavigationButtons();
-            updateScoreDisplay(); // Update score display when navigating
+            updateScoreDisplay();
         }
 
-        // Function to update navigation button states
         function updateNavigationButtons() {
             const prevButton = document.getElementById('prev-button');
             const nextButton = document.getElementById('next-button');
             const submitButton = document.getElementById('submit-button');
-
             prevButton.disabled = currentQuestionIndex === 0;
-            // Next button is enabled if an answer has been selected for the current question OR if it's the last question and an answer has been selected
             nextButton.disabled = (userAnswers[currentQuestionIndex] === null && currentQuestionIndex < questions.length - 1) || (currentQuestionIndex === questions.length - 1 && userAnswers[currentQuestionIndex] === null);
-            submitButton.disabled = (userAnswers[currentQuestionIndex] !== null && questions[currentQuestionIndex].answeredCorrectly !== undefined); // Disable if already answered and evaluated
-
+            submitButton.disabled = (userAnswers[currentQuestionIndex] === null || questions[currentQuestionIndex].answeredCorrectly !== undefined);
             if (currentQuestionIndex === questions.length - 1 && userAnswers[currentQuestionIndex] !== null) {
-                nextButton.disabled = false; // Allow going to score page
+                nextButton.disabled = false;
                 nextButton.textContent = "Finish Quiz";
             } else if (currentQuestionIndex < questions.length - 1) {
                 nextButton.textContent = "Next";
             }
         }
 
-        // Function to update the current score display
         function updateScoreDisplay() {
             document.getElementById('current-score-display').textContent = `Score: ${score} / ${questions.length}`;
         }
 
-        // Function to show the final score
         function showFinalScore() {
-            document.getElementById('quiz-content').innerHTML = ''; // Clear quiz content
-            document.getElementById('feedback').style.display = 'none'; // Hide feedback
+            document.getElementById('quiz-content').innerHTML = '';
+            document.getElementById('feedback').style.display = 'none';
             document.getElementById('prev-button').style.display = 'none';
             document.getElementById('submit-button').style.display = 'none';
             document.getElementById('next-button').style.display = 'none';
-            document.getElementById('current-score-display').style.display = 'none'; // Hide current score display
-
+            document.getElementById('current-score-display').style.display = 'none';
             document.getElementById('final-score').textContent = score;
             document.getElementById('total-questions').textContent = questions.length;
             document.getElementById('score-display').classList.remove('hidden');
         }
 
-        // Function to restart the quiz
         function restartQuiz() {
             document.getElementById('quiz-settings').classList.remove('hidden');
             document.getElementById('quiz-area').classList.add('hidden');
             document.getElementById('prev-button').style.display = 'inline-block';
             document.getElementById('submit-button').style.display = 'inline-block';
             document.getElementById('next-button').style.display = 'inline-block';
-            document.getElementById('current-score-display').style.display = 'block'; // Show current score display
-            // Clear selected grades for next session
+            document.getElementById('current-score-display').style.display = 'block';
             document.querySelectorAll('.grade-checkbox').forEach(cb => {
-                cb.checked = true; // Default back to all grades selected
+                cb.checked = true;
                 cb.parentElement.classList.add('selected-grade');
             });
-            // Reset max questions checkbox and number input
             document.getElementById('max-questions-checkbox').checked = false;
             document.getElementById('max-questions-label').classList.remove('selected-option');
             document.getElementById('num-questions').disabled = false;
-            document.getElementById('num-questions').value = 10; // Reset to default number
-            updateMaxQuestionsCount(); // Update the count displayed for max questions
+            document.getElementById('num-questions').value = 10;
+            updateMaxQuestionsCount();
         }
 
-        // Custom message box function (replaces alert)
         function displayMessageBox(message) {
             const messageBox = document.createElement('div');
             messageBox.style.cssText = `
@@ -961,13 +899,10 @@
             document.body.appendChild(messageBox);
         }
 
-
-        // Function to populate grade checkboxes
         function populateGradeCheckboxes() {
             const gradeGrid = document.getElementById('grade-selection-grid');
-            // Clear existing checkboxes before populating
             gradeGrid.innerHTML = '';
-            for (let i = 1; i <= 8; i++) { // Changed loop to include Grade 7 and 8
+            for (let i = 1; i <= 8; i++) {
                 const container = document.createElement('label');
                 container.className = 'grade-checkbox-container';
                 container.innerHTML = `
@@ -981,61 +916,49 @@
                     } else {
                         container.classList.remove('selected-grade');
                     }
-                    updateMaxQuestionsCount(); // Update max questions count when grades change
+                    updateMaxQuestionsCount();
                 });
                 gradeGrid.appendChild(container);
             }
         }
 
-        // Function to update the displayed count for "Max Questions"
         function updateMaxQuestionsCount() {
             const selectedGradeCheckboxes = document.querySelectorAll('.grade-checkbox:checked');
             const selectedGrades = Array.from(selectedGradeCheckboxes).map(cb => parseInt(cb.value, 10));
             const termsInSelectedGrades = musicTerms.filter(term => selectedGrades.includes(term.grade));
             document.getElementById('max-questions-count').textContent = termsInSelectedGrades.length;
-
-            // Also update the max attribute of the number input
             document.getElementById('num-questions').max = termsInSelectedGrades.length;
-
-            // If max questions checkbox is checked, update the number input value
             if (document.getElementById('max-questions-checkbox').checked) {
                 document.getElementById('num-questions').value = termsInSelectedGrades.length;
             }
         }
 
-
-        // Event listeners for navigation buttons
         document.getElementById('prev-button').addEventListener('click', prevQuestion);
         document.getElementById('next-button').addEventListener('click', nextQuestion);
         document.getElementById('submit-button').addEventListener('click', submitAnswer);
         document.getElementById('start-quiz-button').addEventListener('click', initializeQuiz);
-
-        // Event listener for Max Questions checkbox
         document.getElementById('max-questions-checkbox').addEventListener('change', function() {
             const numQuestionsInput = document.getElementById('num-questions');
             const maxQuestionsLabel = document.getElementById('max-questions-label');
             if (this.checked) {
                 numQuestionsInput.disabled = true;
                 maxQuestionsLabel.classList.add('selected-option');
-                updateMaxQuestionsCount(); // Set value to max available terms
+                updateMaxQuestionsCount();
             } else {
                 numQuestionsInput.disabled = false;
                 maxQuestionsLabel.classList.remove('selected-option');
-                numQuestionsInput.value = 10; // Reset to a default value when unchecked
+                numQuestionsInput.value = 10;
             }
         });
 
-        // Initialize grade checkboxes and max questions count on load
         window.onload = () => {
             populateGradeCheckboxes();
-            // Set default selected grades (e.g., all grades)
             document.querySelectorAll('.grade-checkbox').forEach(cb => {
                 cb.checked = true;
                 cb.parentElement.classList.add('selected-grade');
             });
-            updateMaxQuestionsCount(); // Initial calculation of max terms
+            updateMaxQuestionsCount();
         };
-
     </script>
 </body>
 </html>
