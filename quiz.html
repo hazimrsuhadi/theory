@@ -642,18 +642,35 @@
         }
 
         // ---- QUIZ LOGIC ----
-        function generateQuestion(termObj) {
-            const correctAnswer = termObj.definition;
-            let incorrectAnswers = [];
-            while (incorrectAnswers.length < 3) {
-                const randomTerm = musicTerms[Math.floor(Math.random() * musicTerms.length)];
-                if (randomTerm.definition !== correctAnswer && !incorrectAnswers.includes(randomTerm.definition)) {
-                    incorrectAnswers.push(randomTerm.definition);
-                }
-            }
-            const options = shuffleArray([correctAnswer, ...incorrectAnswers]);
-            return { term: termObj.term, correctAnswer, options };
+function normalizeAnswer(str) {
+    if (!str) return '';
+    return str.replace(/\(.*?\)/g, '').toLowerCase().trim();
+}
+
+function isTooSimilar(a, b) {
+    const normA = normalizeAnswer(a);
+    const normB = normalizeAnswer(b);
+    return normA === normB ||
+        normA.includes(normB) ||
+        normB.includes(normA);
+}
+
+function generateQuestion(termObj) {
+    const correctAnswer = termObj.definition;
+    let incorrectAnswers = [];
+    while (incorrectAnswers.length < 3) {
+        const randomTerm = musicTerms[Math.floor(Math.random() * musicTerms.length)];
+        if (
+            randomTerm.definition !== correctAnswer &&
+            !incorrectAnswers.includes(randomTerm.definition) &&
+            !isTooSimilar(randomTerm.definition, correctAnswer)
+        ) {
+            incorrectAnswers.push(randomTerm.definition);
         }
+    }
+    const options = shuffleArray([correctAnswer, ...incorrectAnswers]);
+    return { term: termObj.term, correctAnswer, options };
+}
 
         function initializeQuiz() {
             const numQuestionsInput = document.getElementById('num-questions');
