@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.container { animation: fadeIn 0.8s ease; }
         body {
             font-family: 'Inter', sans-serif;
             background-color: #1a202c; /* Dark background */
@@ -31,6 +33,22 @@
         .service-item:last-child {
             border-bottom: none;
         }
+        .category-header {
+    transition: background 0.2s, color 0.2s, letter-spacing 0.2s;
+}
+.category-header:hover {
+    background: #5a67d8;
+    color: #fff;
+    letter-spacing: 1px;
+}
+.service-item {
+    transition: box-shadow 0.2s, background 0.2s, transform 0.2s;
+}
+.service-item:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    background: #3b4252;
+    transform: translateY(-2px) scale(1.01);
+}
         @media print {
   body { background: #fff; color: #000; }
   .card { box-shadow: none; background: #fff; }
@@ -233,25 +251,43 @@
                 <div class="mb-8 card p-4">
                     <h2 class="text-xl font-semibold text-white mb-3">Contact Information</h2>
                     <p class="text-gray-300 mb-2">
-                        <span class="font-semibold text-white">Email:</span> <a href="mailto:hazim.r.suhadi@gmail.com" class="text-blue-400 hover:underline">hazim.r.suhadi@gmail.com</a>
+                        <span class="font-semibold text-white">Email:</span> <a href="mailto:hazim.r.suhadi@gmail.com" class="text-blue-400 hover:underline focus:ring-2 focus:ring-blue-400 rounded transition">hazim.r.suhadi@gmail.com</a>
                     </p>
                     <p class="text-gray-300">
-                        <span class="font-semibold text-white">WhatsApp Number:</span> 0812-9057-0279
+                        <span class="font-semibold text-white">WhatsApp Number:</span> <a href="https://wa.me/6281290570279" class="text-green-400 hover:underline focus:ring-2 focus:ring-green-400 rounded transition" target="_blank" rel="noopener">0812-9057-0279</a>
                     </p>
                 </div>
 
                 <!-- Bank Accounts -->
                 <div class="mb-8 card p-4">
                     <h2 class="text-xl font-semibold text-white mb-3">Payment Information</h2>
+
                     <p class="text-gray-300 mb-2">
-                        <span class="font-semibold text-white">Mandiri:</span> 1020005188715
-                    </p>
-                    <p class="text-gray-300">
-                        <span class="font-semibold text-white">BCA Digital:</span> 005116831490
-                    </p>
+    <span class="font-semibold text-white">Mandiri:</span>
+    <span id="mandiri-account">1020005188715</span>
+    <button onclick="copyAccount('mandiri-account')" class="ml-2 px-2 py-1 bg-gray-700 rounded hover:bg-gray-600 text-xs">Copy</button>
+</p>
+
+
+<p class="text-gray-300 mb-2">
+    <span class="font-semibold text-white">BCA Digital:</span>
+    <span id="bca-account">005116831490</span>
+    <button onclick="copyAccount('bca-account')" class="ml-2 px-2 py-1 bg-gray-700 rounded hover:bg-gray-600 text-xs">Copy</button>
+</p>
+
                 </div>
             </div>
         </div>
     </div>
 </body>
+
+<script>
+function copyAccount(id) {
+    const el = document.getElementById(id);
+    navigator.clipboard.writeText(el.textContent);
+    el.nextElementSibling.textContent = "Copied!";
+    setTimeout(() => { el.nextElementSibling.textContent = "Copy"; }, 1200);
+}
+</script>
+
 </html>
