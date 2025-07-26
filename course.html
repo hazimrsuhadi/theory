@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching Sessions - Video Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .video-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            margin-bottom: 1rem;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .coming-soon {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .coming-soon h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .coming-soon p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .resources-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .resources-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .resources-header h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .resources-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .resource-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8eeff 100%);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .resource-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .resource-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .resource-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .view-btn:hover {
+            box-shadow: 0 6px 15px rgba(72, 187, 120, 0.4);
+        }
+
+
+
+
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Teaching Sessions</h1>
+            <p class="subtitle">Video Library for Students</p>
+        </header>
+
+        <!-- Resources Section -->
+        <div class="resources-section">
+            <div class="resources-header">
+                <h2>📚 Course Resources</h2>
+                <p>Essential materials for your learning journey</p>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-icon">📖</div>
+                <h3 class="resource-title">Course Workbook & Textbook</h3>
+                <p class="resource-description">
+                    Your complete semester guide containing exercises, theory explanations, and practice materials. 
+                    This PDF will be your companion throughout the entire course.
+                </p>
+                <div>
+                    <a href="#" class="download-btn" onclick="alert('Please upload your PDF file and update this link!')">
+                        📥 Download PDF
+                    </a>
+                    <a href="#" class="download-btn view-btn" onclick="alert('Please upload your PDF file and update this link!')">
+                        👁️ View Online
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Section -->
+        <div class="resources-section">
+            <div class="resources-header">
+                <h2>🎥 Video Lessons</h2>
+                <p>Watch and review our teaching sessions</p>
+            </div>
+        </div>
+
+        <div class="video-grid">
+            <!-- Video 1 - Replace with your actual YouTube video -->
+            <div class="video-card">
+                <h3 class="video-title">Session 1: Introduction</h3>
+                <div class="video-meta">
+                    <span>📅 Date: July 26, 2025</span>
+                    <span>⏱️ Duration: 30 minutes</span>
+                </div>
+                <div class="video-wrapper">
+                    <!-- YouTube embed format with your video ID -->
+                    <iframe 
+                        src="https://www.youtube.com/embed/DZiDDkWgz1A" 
+                        title="Teaching Session 1" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <p class="video-description">
+                    Today we reviewed the types of motion in music, identified instances of parallel and direct fifths and octaves, and practiced analyzing and constructing simple chords in first inversion.
+                </p>
+            </div>
+
+            <!-- Placeholder for future videos -->
+            <div class="coming-soon">
+                <h2>📹 More Videos Coming Soon!</h2>
+                <p>I'll be adding more teaching sessions here. Check back regularly for new content!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // You can add JavaScript functionality here if needed
+            console.log('Teaching Videos page loaded successfully!');
+        });
+    </script>
+</body>
+</html>
