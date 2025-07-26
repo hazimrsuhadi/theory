@@ -129,6 +129,38 @@
             margin-bottom: 2rem;
         }
 
+        .resources-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .workbook-preview {
+            text-align: center;
+        }
+
+        .workbook-screenshot {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .workbook-screenshot:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .screenshot-caption {
+            margin-top: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
         .resources-header {
             text-align: center;
             margin-bottom: 2rem;
@@ -152,8 +184,6 @@
             padding: 2rem;
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            max-width: 500px;
-            margin: 0 auto;
         }
 
         .resource-card:hover {
@@ -226,6 +256,15 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
+
+            .resources-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .workbook-preview {
+                order: -1;
+            }
         }
     </style>
 </head>
@@ -243,20 +282,28 @@
                 <p>Essential materials for your learning journey</p>
             </div>
             
-            <div class="resource-card">
-                <div class="resource-icon">📖</div>
-                <h3 class="resource-title">Course Workbook & Textbook</h3>
-                <p class="resource-description">
-                    Your complete semester guide containing exercises, theory explanations, and practice materials. 
-                    This PDF will be your companion throughout the entire course.
-                </p>
-                <div>
-                    <a href="resources/textbook.pdf" class="download-btn" download>
+            <div class="resources-content">
+                <div class="workbook-preview">
+                    <!-- Replace with your actual workbook screenshot -->
+                    <img src="img/first.png" alt="JCoM Grade 7 Workbook Preview" class="workbook-screenshot">
+                    <p class="screenshot-caption">Preview of the JCoM Grade 7 Workbook</p>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon">📖</div>
+                    <h3 class="resource-title">Course Workbook & Textbook</h3>
+                    <p class="resource-description">
+                        Your complete semester guide containing exercises, theory explanations, and practice materials. 
+                        This PDF will be your companion throughout the entire course.
+                    </p>
+                    <div>
+                        <a href="resources/textbook.pdf" class="download-btn" download>
                         📥 Download PDF
                     </a>
                     <a href="resources/textbook.pdf" class="download-btn view-btn" target="_blank">
                         👁️ View Online
                     </a>
+                    </div>
                 </div>
             </div>
         </div>
