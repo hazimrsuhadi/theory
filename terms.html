@@ -1700,6 +1700,12 @@
                     
                     utterance.onerror = (event) => {
                         console.error('SpeechSynthesisUtterance.onerror', event);
+                        // On some browsers (like Safari), cancelling speech fires the onerror event.
+                        // We can safely ignore this specific error.
+                        if (event.error === 'canceled') {
+                            console.log('Speech was cancelled by the user, which is expected.');
+                            return;
+                        }
                         let errorText = `An error occurred while trying to speak "${trimmedText}".`;
                         if (event.error) {
                             errorText += ` Error type: ${event.error}`;
