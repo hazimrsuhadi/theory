@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎼 Music Analysis Reference Sheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .clear-btn {
+            padding: 12px 25px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .category-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .learning-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .difficulty-selector label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            background: white;
+            font-size: 14px;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .mode-btn {
+            padding: 8px 15px;
+            background: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .mode-btn:hover {
+            background: #d5dbdb;
+        }
+
+        .mode-btn.active {
+            background: #e67e22;
+            color: white;
+            border-color: #e67e22;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            background: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .category-btn:hover {
+            background: #d5dbdb;
+            transform: translateY(-2px);
+        }
+
+        .category-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .category-section {
+            margin-bottom: 40px;
+            opacity: 1;
+            transition: all 0.3s ease;
+        }
+
+        .category-section.hidden {
+            display: none;
+        }
+
+        .category-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .term-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .term-card.quiz-mode {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+        }
+
+        .term-card.simple-mode .term-meaning {
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .term-card .difficulty-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .difficulty-badge.beginner {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .difficulty-badge.intermediate {
+            background: #f39c12;
+            color: white;
+        }
+
+        .difficulty-badge.advanced {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .term-simple {
+            font-size: 0.95em;
+            color: #27ae60;
+            font-style: italic;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .simple-mode .term-simple {
+            display: block;
+        }
+
+        .quiz-answer {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .quiz-mode .term-meaning {
+            display: none;
+        }
+
+        .quiz-mode .quiz-answer {
+            display: block;
+        }
+
+        .quiz-reveal-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .quiz-reveal-btn:hover {
+            background: #2980b9;
+        }
+
+        .pronunciation {
+            color: #8e44ad;
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            color: #8e44ad;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            background: #8e44ad;
+            color: white;
+        }
+
+        .term-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+
+        .term-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .term-card:hover::before {
+            width: 8px;
+        }
+
+        .term-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .term-meaning {
+            color: #555;
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .no-results.hidden {
+            display: none;
+        }
+
+        .stats {
+            background: #ecf0f1;
+            padding: 15px 30px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #34495e;
+            border-top: 1px solid #bdc3c7;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .learning-options {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            
+            .mode-selector {
+                justify-content: center;
+            }
+            
+            .category-filters {
+                justify-content: flex-start;
+            }
+            
+            .terms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .difficulty-selector {
+                justify-content: center;
+            }
+            
+            .mode-btn {
+                flex: 1;
+                text-align: center;
+            }
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎼 Music Analysis Reference Sheet</h1>
+            <p>Descriptors for Melody, Harmony, Rhythm, Texture, Form, Timbre, and Dynamics</p>
+        </div>
+
+        <div class="controls">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search musical terms..." id="searchInput">
+                <button class="clear-btn" id="clearBtn">Clear</button>
+            </div>
+            
+            <div class="learning-options">
+                <div class="difficulty-selector">
+                    <label>Difficulty Level:</label>
+                    <select id="difficultySelect">
+                        <option value="all">All Levels</option>
+                        <option value="beginner">Beginner (K-5)</option>
+                        <option value="intermediate">Intermediate (6-8)</option>
+                        <option value="advanced">Advanced (9-12)</option>
+                    </select>
+                </div>
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="study">📚 Study Mode</button>
+                    <button class="mode-btn" data-mode="quiz">🎯 Quiz Mode</button>
+                    <button class="mode-btn" data-mode="simple">📖 Simple Mode</button>
+                </div>
+            </div>
+            
+            <div class="category-filters">
+                <button class="category-btn active" data-category="all">All Categories</button>
+                <button class="category-btn" data-category="melody">🎵 Melody</button>
+                <button class="category-btn" data-category="harmony">🎼 Harmony</button>
+                <button class="category-btn" data-category="rhythm">🥁 Rhythm</button>
+                <button class="category-btn" data-category="texture">🎶 Texture</button>
+                <button class="category-btn" data-category="form">🧩 Form</button>
+                <button class="category-btn" data-category="timbre">🎨 Timbre</button>
+                <button class="category-btn" data-category="dynamics">📣 Dynamics & Articulation</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="category-section" data-category="melody">
+                <h2 class="category-title">🎵 Melody</h2>
+                <div class="terms-grid">
+                    <div class="term-card" data-term="cantabile" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Cantabile
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/kɑnˈtɑbɪleɪ/</div>
+                        <div class="term-meaning">Singing style; smooth and lyrical</div>
+                        <div class="term-simple">Music that sounds like someone singing - smooth and pretty</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Singing style; smooth and lyrical</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="angular" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Angular
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Large leaps; jagged contour</div>
+                        <div class="term-simple">Music that jumps around a lot - not smooth</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Large leaps; jagged contour</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="conjunct" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Conjunct
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Stepwise motion</div>
+                        <div class="term-simple">Notes that go up or down step by step, like walking up stairs</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Stepwise motion</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="disjunct" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Disjunct
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Leaps between notes</div>
+                        <div class="term-simple">Music that jumps far between notes, like leaping over steps</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Leaps between notes</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="ornamented" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Ornamented
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Includes trills, grace notes</div>
+                        <div class="term-simple">Music with fancy decorations added to the main melody</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Includes trills, grace notes</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="motivic" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Motivic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Built from short repeating ideas</div>
+                        <div class="term-simple">Music made from small pieces that repeat, like a pattern</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Built from short repeating ideas</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="imitative" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Imitative
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Echoed by another voice</div>
+                        <div class="term-simple">One voice copies what another voice just sang or played</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Echoed by another voice</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="sequential" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Sequential
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Motive repeated at different pitches</div>
+                        <div class="term-simple">A musical pattern that repeats getting higher or lower each time</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Motive repeated at different pitches</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="melismatic" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Melismatic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/ˌmelɪzˈmætɪk/</div>
+                        <div class="term-meaning">Multiple notes per syllable (vocal)</div>
+                        <div class="term-simple">Singing many different notes on just one word, like "Ahhhh" going up and down</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Multiple notes per syllable (vocal)</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="syllabic" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Syllabic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">One note per syllable</div>
+                        <div class="term-simple">Each word part gets its own musical note, like "Hap-py Birth-day"</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">One note per syllable</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="scalar" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Scalar
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Based on scales</div>
+                        <div class="term-simple">Music that follows scale patterns like Do-Re-Mi-Fa-Sol</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Based on scales</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="decorative" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Decorative
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Elaborate, virtuosic gestures</div>
+                        <div class="term-simple">Fancy musical decorations that show off skill, like musical jewelry</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Elaborate, virtuosic gestures</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="folk-like" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Folk-like
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Simple, modal or pentatonic</div>
+                        <div class="term-simple">Music that sounds like old traditional songs people sing together</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Simple, modal or pentatonic</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="fragmented" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Fragmented
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Broken into short phrases</div>
+                        <div class="term-simple">Music that sounds choppy, like broken pieces instead of long flowing lines</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Broken into short phrases</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="expansive" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Expansive
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Broad, sweeping melodic shape</div>
+                        <div class="term-simple">Music with long, flowing melodies that cover a wide range of notes</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Broad, sweeping melodic shape</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-section" data-category="harmony">
+                <h2 class="category-title">🎼 Harmony</h2>
+                <div class="terms-grid">
+                    <div class="term-card" data-term="diatonic" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Diatonic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/ˌdaɪəˈtɒnɪk/</div>
+                        <div class="term-meaning">Based on major/minor scale</div>
+                        <div class="term-simple">Music that uses only the regular notes of a major or minor scale</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Based on major/minor scale</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="chromatic" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Chromatic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/krəˈmætɪk/</div>
+                        <div class="term-meaning">Includes outside-key tones</div>
+                        <div class="term-simple">Music that uses all the black and white keys, including sharps and flats</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Includes outside-key tones</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="modal" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Modal
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Based on church modes</div>
+                        <div class="term-simple">Music based on old scales used in medieval times, sounds ancient or mysterious</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Based on church modes</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="consonant" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Consonant
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Stable, pleasant intervals</div>
+                        <div class="term-simple">Notes that sound nice and peaceful together, like they belong</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Stable, pleasant intervals</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="dissonant" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Dissonant
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Tension-filled, harsh intervals</div>
+                        <div class="term-simple">Notes that sound clashing or uncomfortable together, need to resolve</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Tension-filled, harsh intervals</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="functional" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Functional
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Clear tonal roles (tonic, dominant)</div>
+                        <div class="term-simple">Chords that have specific jobs, like home base and away from home</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Clear tonal roles (tonic, dominant)</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="non-functional" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Non-functional
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Avoids traditional harmonic roles</div>
+                        <div class="term-simple">Chords that don't follow the usual rules of home and away</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Avoids traditional harmonic roles</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="tonal" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Tonal
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Has a central key</div>
+                        <div class="term-simple">Music that has a home note or key that feels like the center</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Has a central key</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="atonal" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Atonal
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">No tonal center</div>
+                        <div class="term-simple">Music with no home note - all notes seem equally important</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">No tonal center</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="extended-harmony" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Extended Harmony
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Includes 7ths, 9ths, etc.</div>
+                        <div class="term-simple">Chords with extra notes added to make them sound jazzy or colorful</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Includes 7ths, 9ths, etc.</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="quartal-quintal" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Quartal/Quintal
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Built on 4ths/5ths</div>
+                        <div class="term-simple">Chords built by stacking 4th and 5th intervals instead of 3rds</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Built on 4ths/5ths</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="clustered" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Clustered
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Notes grouped tightly together</div>
+                        <div class="term-simple">Many notes played very close together, like pressing many piano keys at once</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Notes grouped tightly together</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="cadential" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Cadential
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Uses cadences to define phrases</div>
+                        <div class="term-simple">Music that uses special chord patterns to show where phrases end</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Uses cadences to define phrases</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-section" data-category="rhythm">
+                <h2 class="category-title">🥁 Rhythm</h2>
+                <div class="terms-grid">
+                    <div class="term-card" data-term="syncopated" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Syncopated
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Emphasis off the beat</div>
+                        <div class="term-simple">Rhythm that accents the weak beats, making it feel unexpected</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Emphasis off the beat</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="straight" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Straight
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Regular, on-the-beat rhythms</div>
+                        <div class="term-simple">Steady rhythm that follows the beat exactly, like marching</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Regular, on-the-beat rhythms</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="swing" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Swing
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Uneven beat divisions (often in jazz)</div>
+                        <div class="term-simple">Rhythm that bounces like "long-short, long-short" in jazz music</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Uneven beat divisions (often in jazz)</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="triplet-based" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Triplet-based
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Three notes per beat</div>
+                        <div class="term-simple">Rhythm that groups notes in threes, like "tri-plet, tri-plet"</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Three notes per beat</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="dotted-rhythms" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Dotted rhythms
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Adds unevenness through dotted notes</div>
+                        <div class="term-simple">Rhythm with long-short patterns, like "BUM-ba, BUM-ba"</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Adds unevenness through dotted notes</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="regular-meter" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Regular meter
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Standard time signatures (4/4, 3/4)</div>
+                        <div class="term-simple">Common beat patterns like "1-2-3-4" or "1-2-3" that repeat</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Standard time signatures (4/4, 3/4)</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="irregular-meter" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Irregular meter
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Unusual time signatures (5/8, 7/8)</div>
+                        <div class="term-simple">Beat patterns that don't fit the usual groups, like counting 5 or 7</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Unusual time signatures (5/8, 7/8)</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="polyrhythm" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Polyrhythm
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Multiple rhythms at once</div>
+                        <div class="term-simple">Different rhythm patterns played at the same time, like clapping and tapping different beats</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Multiple rhythms at once</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="augmentation" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Augmentation
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Rhythms are lengthened</div>
+                        <div class="term-simple">Taking a rhythm pattern and making all the notes twice as long</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Rhythms are lengthened</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="diminution" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Diminution
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Rhythms are shortened</div>
+                        <div class="term-simple">Taking a rhythm pattern and making all the notes twice as fast</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Rhythms are shortened</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="rubato" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Rubato
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/ruˈbɑtoʊ/</div>
+                        <div class="term-meaning">Flexible tempo for expression</div>
+                        <div class="term-simple">Speeding up and slowing down for emotion, like speaking with feeling</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Flexible tempo for expression</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="ostinato" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Ostinato
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/ˌɒstɪˈnɑtoʊ/</div>
+                        <div class="term-meaning">Repeating rhythm pattern</div>
+                        <div class="term-simple">A rhythm pattern that repeats over and over, like a musical loop</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Repeating rhythm pattern</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-section" data-category="texture">
+                <h2 class="category-title">🎶 Texture</h2>
+                <div class="terms-grid">
+                    <div class="term-card" data-term="monophonic" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Monophonic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/ˌmɒnəˈfɒnɪk/</div>
+                        <div class="term-meaning">Single melody line</div>
+                        <div class="term-simple">Only one melody with no harmony, like singing alone</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Single melody line</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="homophonic" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Homophonic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/ˌhɒməˈfɒnɪk/</div>
+                        <div class="term-meaning">Melody + chords/accompaniment</div>
+                        <div class="term-simple">One main melody with chords supporting it, like singing with piano</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Melody + chords/accompaniment</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="polyphonic" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Polyphonic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/ˌpɒlɪˈfɒnɪk/</div>
+                        <div class="term-meaning">Several independent melodies</div>
+                        <div class="term-simple">Multiple melodies played at the same time, like a musical conversation</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Several independent melodies</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="heterophonic" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Heterophonic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/ˌhetərəˈfɒnɪk/</div>
+                        <div class="term-meaning">Same melody in varied forms</div>
+                        <div class="term-simple">Same tune played with different decorations or variations at the same time</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Same melody in varied forms</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="contrapuntal" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Contrapuntal
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Complex counterpoint</div>
+                        <div class="term-simple">Multiple melodies woven together following strict rules</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Complex counterpoint</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="canonic" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Canonic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Exact imitation (canon)</div>
+                        <div class="term-simple">One voice copies exactly what another voice just sang, like "Row, Row, Row Your Boat"</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Exact imitation (canon)</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="fugal" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Fugal
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Structured entries and development</div>
+                        <div class="term-simple">Complex musical form where voices enter one by one with the same theme</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Structured entries and development</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="layered" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Layered
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Built in successive musical layers</div>
+                        <div class="term-simple">Music built by adding one part at a time, like stacking blocks</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Built in successive musical layers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-section" data-category="form">
+                <h2 class="category-title">🧩 Form</h2>
+                <div class="terms-grid">
+                    <div class="term-card" data-term="binary" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Binary (AB)
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Two-part contrast</div>
+                        <div class="term-simple">Music with two different sections, like verse-chorus</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Two-part contrast</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="ternary" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Ternary (ABA)
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Return of first section</div>
+                        <div class="term-simple">Three-part form that goes away and comes back home (like a sandwich)</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Return of first section</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="rondo" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Rondo (ABACA)
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Repeated return to a theme</div>
+                        <div class="term-simple">Main theme keeps coming back between different sections</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Repeated return to a theme</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="sonata-form" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Sonata form
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Exposition, development, recap</div>
+                        <div class="term-simple">Classical form: present themes, develop them, then bring them back</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Exposition, development, recap</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="theme-variations" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Theme and variations
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">One theme altered repeatedly</div>
+                        <div class="term-simple">Start with a tune, then play it different ways each time</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">One theme altered repeatedly</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="strophic" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Strophic
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Same music for each stanza</div>
+                        <div class="term-simple">Same tune repeated for each verse, like most folk songs</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Same music for each stanza</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="through-composed" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Through-composed
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Continuous, no repeats</div>
+                        <div class="term-simple">Music that keeps changing without repeating sections</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Continuous, no repeats</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-section" data-category="timbre">
+                <h2 class="category-title">🎨 Timbre</h2>
+                <div class="terms-grid">
+                    <div class="term-card" data-term="bright-dark" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Bright/Dark
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">High vs. low frequency emphasis</div>
+                        <div class="term-simple">Bright sounds are light and sparkly, dark sounds are heavy and deep</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">High vs. low frequency emphasis</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="warm-cool" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Warm/Cool
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Expressive tone character</div>
+                        <div class="term-simple">Warm sounds feel cozy and friendly, cool sounds feel distant or calm</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Expressive tone character</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="piercing-mellow" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Piercing/Mellow
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Sharp vs. soft quality</div>
+                        <div class="term-simple">Piercing sounds cut through, mellow sounds are smooth and gentle</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Sharp vs. soft quality</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="resonant-dry" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Resonant/Dry
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Echo vs. flat tone</div>
+                        <div class="term-simple">Resonant sounds have echo and ring out, dry sounds stop quickly</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Echo vs. flat tone</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="transparent-dense" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Transparent/Dense
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Clarity vs. thickness of sound</div>
+                        <div class="term-simple">Transparent sounds are clear and easy to hear through, dense sounds are thick and complex</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Clarity vs. thickness of sound</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-section" data-category="dynamics">
+                <h2 class="category-title">📣 Dynamics & Articulation</h2>
+                <div class="terms-grid">
+                    <div class="term-card" data-term="terraced" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Terraced
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Sudden shifts in volume</div>
+                        <div class="term-simple">Volume changes suddenly like steps, not gradually like a ramp</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Sudden shifts in volume</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="gradual" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Gradual
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Crescendo/decrescendo</div>
+                        <div class="term-simple">Volume changes slowly, getting louder or softer bit by bit</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Crescendo/decrescendo</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="accented" data-difficulty="beginner">
+                        <div class="difficulty-badge beginner">K-5</div>
+                        <div class="term-name">
+                            Accented
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="term-meaning">Emphasized notes</div>
+                        <div class="term-simple">Some notes are played stronger to make them stand out</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Emphasized notes</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="legato-staccato" data-difficulty="intermediate">
+                        <div class="difficulty-badge intermediate">6-8</div>
+                        <div class="term-name">
+                            Legato/Staccato
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/lɪˈɡɑtoʊ/ /stəˈkɑtoʊ/</div>
+                        <div class="term-meaning">Smooth vs. detached</div>
+                        <div class="term-simple">Legato is smooth and connected, staccato is short and choppy</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Smooth vs. detached</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="marcato" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Marcato
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/mɑrˈkɑtoʊ/</div>
+                        <div class="term-meaning">Marked and bold</div>
+                        <div class="term-simple">Notes played with strong, bold emphasis - very noticeable</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Marked and bold</div>
+                        </div>
+                    </div>
+                    <div class="term-card" data-term="sforzando" data-difficulty="advanced">
+                        <div class="difficulty-badge advanced">9-12</div>
+                        <div class="term-name">
+                            Sforzando
+                            <button class="audio-btn" title="Hear pronunciation">🔊</button>
+                        </div>
+                        <div class="pronunciation">/ˌsfɔrˈtsɑndoʊ/</div>
+                        <div class="term-meaning">Sudden, strong accent</div>
+                        <div class="term-simple">A sudden loud accent that jumps out unexpectedly</div>
+                        <div class="quiz-answer">
+                            <button class="quiz-reveal-btn">Show Answer</button>
+                            <div class="answer-text" style="display:none;">Sudden, strong accent</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="no-results hidden">
+                <h3>No results found</h3>
+                <p>Try adjusting your search terms or selecting a different category.</p>
+            </div>
+        </div>
+
+        <div class="stats">
+            <span id="statsText">Showing all 66 musical terms across 7 categories</span>
+        </div>
+    </div>
+
+    <script>
+        class MusicReferenceApp {
+            constructor() {
+                this.searchInput = document.getElementById('searchInput');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.categoryBtns = document.querySelectorAll('.category-btn');
+                this.categorySections = document.querySelectorAll('.category-section');
+                this.termCards = document.querySelectorAll('.term-card');
+                this.noResults = document.querySelector('.no-results');
+                this.statsText = document.getElementById('statsText');
+                this.difficultySelect = document.getElementById('difficultySelect');
+                this.modeBtns = document.querySelectorAll('.mode-btn');
+
+                this.currentCategory = 'all';
+                this.currentSearch = '';
+                this.currentDifficulty = 'all';
+                this.currentMode = 'study';
+
+                this.initEventListeners();
+                this.updateStats();
+                this.attachDynamicEventListeners();
+            }
+
+            initEventListeners() {
+                // Search functionality
+                this.searchInput.addEventListener('input', (e) => {
+                    this.currentSearch = e.target.value.toLowerCase().trim();
+                    this.filterContent();
+                });
+
+                // Clear button
+                this.clearBtn.addEventListener('click', () => {
+                    this.searchInput.value = '';
+                    this.currentSearch = '';
+                    this.filterContent();
+                    this.searchInput.focus();
+                });
+
+                // Category filters
+                this.categoryBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.categoryBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentCategory = btn.dataset.category;
+                        this.filterContent();
+                    });
+                });
+
+                // Difficulty selector
+                this.difficultySelect.addEventListener('change', (e) => {
+                    this.currentDifficulty = e.target.value;
+                    this.filterContent();
+                });
+
+                // Mode selector
+                this.modeBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.modeBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentMode = btn.dataset.mode;
+                        this.updateMode();
+                        this.filterContent();
+                    });
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.searchInput.value = '';
+                        this.currentSearch = '';
+                        this.filterContent();
+                    } else if (e.ctrlKey && e.key === 'k') {
+                        e.preventDefault();
+                        this.searchInput.focus();
+                    }
+                });
+            }
+
+            updateMode() {
+                const container = document.querySelector('.container');
+                container.className = 'container';
+                container.classList.add(`${this.currentMode}-mode`);
+
+                // Update term cards based on mode
+                this.termCards.forEach(card => {
+                    card.className = 'term-card';
+                    if (this.currentMode !== 'study') {
+                        card.classList.add(`${this.currentMode}-mode`);
+                    }
+                });
+                // Refresh term cards reference
+                this.termCards = document.querySelectorAll('.term-card');
+                // Re-attach event listeners
+                this.attachDynamicEventListeners();
+            }
+
+            filterContent() {
+                let visibleSections = 0;
+                let visibleTerms = 0;
+
+                this.categorySections.forEach(section => {
+                    const category = section.dataset.category;
+                    const shouldShowCategory = this.currentCategory === 'all' || this.currentCategory === category;
+                    
+                    if (!shouldShowCategory) {
+                        section.classList.add('hidden');
+                        return;
+                    }
+
+                    const termCards = section.querySelectorAll('.term-card');
+                    let visibleTermsInSection = 0;
+
+                    termCards.forEach(card => {
+                        const termName = card.querySelector('.term-name').textContent.toLowerCase();
+                        const termMeaning = card.querySelector('.term-meaning').textContent.toLowerCase();
+                        const difficulty = card.dataset.difficulty || 'intermediate';
+                        
+                        const matchesSearch = !this.currentSearch || 
+                            termName.includes(this.currentSearch) || 
+                            termMeaning.includes(this.currentSearch);
+                        
+                        const matchesDifficulty = this.currentDifficulty === 'all' || 
+                            this.currentDifficulty === difficulty;
+
+                        if (matchesSearch && matchesDifficulty) {
+                            card.style.display = 'block';
+                            card.style.visibility = 'visible';
+                            visibleTermsInSection++;
+                            this.highlightSearchTerm(card);
+                        } else {
+                            card.style.display = 'none';
+                            card.style.visibility = 'hidden';
+                        }
+                    });
+
+                    if (visibleTermsInSection > 0) {
+                        section.classList.remove('hidden');
+                        visibleSections++;
+                        visibleTerms += visibleTermsInSection;
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+
+                // Show/hide no results message
+                if (visibleTerms === 0) {
+                    this.noResults.classList.remove('hidden');
+                } else {
+                    this.noResults.classList.add('hidden');
+                }
+
+                this.updateStats(visibleTerms, visibleSections);
+                this.attachDynamicEventListeners();
+            }
+
+            // Attach event listeners to audio and quiz buttons after DOM changes
+            attachDynamicEventListeners() {
+                const replaceAndListen = (selector, eventHandler) => {
+                    document.querySelectorAll(selector).forEach(btn => {
+                        // Cloning the node is the most reliable way to remove all old event listeners
+                        const newBtn = btn.cloneNode(true);
+                        btn.parentNode.replaceChild(newBtn, btn);
+                        newBtn.addEventListener('click', eventHandler);
+                    });
+                };
+
+                // Audio buttons
+                replaceAndListen('.audio-btn', (e) => {
+                    const btn = e.currentTarget;
+                    const termNameElement = btn.closest('.term-name');
+                    // Extract term from the text node, ignoring the button's own text
+                    const term = Array.from(termNameElement.childNodes)
+                        .filter(node => node.nodeType === Node.TEXT_NODE)
+                        .map(node => node.textContent.trim())
+                        .join('') || termNameElement.textContent.trim();
+                    window.speakText(term);
+                });
+
+                // Quiz reveal buttons
+                replaceAndListen('.quiz-reveal-btn', (e) => {
+                    window.revealAnswer(e.currentTarget);
+                });
+            }
+
+            highlightSearchTerm(card) {
+                const termNameElement = card.querySelector('.term-name');
+                const termMeaningElement = card.querySelector('.term-meaning');
+                const audioButton = termNameElement.querySelector('.audio-btn'); // Keep a reference to the button
+
+                if (this.currentSearch) {
+                    [termNameElement, termMeaningElement].forEach(element => {
+                        // Temporarily remove the button before changing innerHTML
+                        const button = element.querySelector('.audio-btn');
+                        if (button) element.removeChild(button);
+
+                        const originalText = element.textContent;
+                        const regex = new RegExp(`(${this.escapeRegex(this.currentSearch)})`, 'gi');
+                        const highlightedText = originalText.replace(regex, '<span class="highlight">$1</span>');
+                        element.innerHTML = highlightedText;
+
+                        // Add the button back
+                        if (button) element.appendChild(button);
+                    });
+                } else {
+                    // Remove highlights by resetting the text content, then re-adding the button
+                    [termNameElement, termMeaningElement].forEach(element => {
+                        const button = element.querySelector('.audio-btn');
+                        if (button) element.removeChild(button);
+                        
+                        const text = element.textContent; // Get text without highlight spans
+                        element.innerHTML = text; // Reset innerHTML to just the text
+                        
+                        if (button) element.appendChild(button);
+                    });
+                }
+            }
+
+            escapeRegex(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
+
+            updateStats(visibleTerms = null, visibleSections = null) {
+                const totalTerms = this.termCards.length;
+                const totalSections = this.categorySections.length;
+                
+                if (visibleTerms === null) visibleTerms = totalTerms;
+                if (visibleSections === null) visibleSections = totalSections;
+
+                let statsMessage;
+                if (this.currentSearch || this.currentCategory !== 'all') {
+                    if (visibleTerms === 0) {
+                        statsMessage = 'No terms match your criteria';
+                    } else {
+                        statsMessage = `Showing ${visibleTerms} of ${totalTerms} musical terms`;
+                        if (this.currentCategory !== 'all') {
+                            const categoryName = document.querySelector(`[data-category="${this.currentCategory}"]`).textContent;
+                            statsMessage += ` in ${categoryName}`;
+                        }
+                    }
+                } else {
+                    statsMessage = `Showing all ${totalTerms} musical terms across ${totalSections} categories`;
+                }
+
+                this.statsText.textContent = statsMessage;
+            }
+        }
+
+        // Supporting functions for new features
+        function speakText(text) {
+            const trimmedText = text.trim();
+            if (!trimmedText) {
+                console.error('speakText called with empty string.');
+                return;
+            }
+            
+            console.log(`Attempting to speak: "${trimmedText}"`);
+
+            try {
+                if ('speechSynthesis' in window) {
+                    const synth = window.speechSynthesis;
+
+                    // A more robust way to stop any ongoing speech
+                    if (synth.speaking) {
+                        console.log('Speech synthesis is currently active, cancelling.');
+                        synth.cancel();
+                    }
+
+                    const utterance = new SpeechSynthesisUtterance(trimmedText);
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.1;
+                    utterance.volume = 1.0;
+                    
+                    utterance.onstart = () => {
+                        console.log(`Speech started for: "${trimmedText}"`);
+                    };
+                    
+                    utterance.onerror = (event) => {
+                        console.error('SpeechSynthesisUtterance.onerror', event);
+                        let errorText = `An error occurred while trying to speak "${trimmedText}".`;
+                        if (event.error) {
+                            errorText += ` Error type: ${event.error}`;
+                        }
+                        alert(errorText);
+                    };
+                    
+                    utterance.onend = () => {
+                        console.log(`Speech ended for: "${trimmedText}"`);
+                    };
+                    
+                    // Use a small timeout to ensure the cancel command has time to process
+                    setTimeout(() => {
+                        synth.speak(utterance);
+                    }, 50);
+
+                } else {
+                    console.log('Speech synthesis not available.');
+                    alert(`Speech synthesis is not supported by your browser.`);
+                }
+            } catch (error) {
+                console.error('A critical error occurred in the speakText function:', error);
+                alert(`A critical error occurred: ${error.message}`);
+            }
+        }
+
+        function revealAnswer(button) {
+            try {
+                const answerText = button.nextElementSibling;
+                if (answerText && answerText.style.display === 'none') {
+                    answerText.style.display = 'block';
+                    button.textContent = 'Hide Answer';
+                    button.style.background = '#e74c3c';
+                } else if (answerText) {
+                    answerText.style.display = 'none';
+                    button.textContent = 'Show Answer';
+                    button.style.background = '#3498db';
+                }
+            } catch (error) {
+                console.error('Reveal answer error:', error);
+            }
+        }
+
+        // Make functions globally accessible
+        window.speakText = speakText;
+        window.revealAnswer = revealAnswer;
+
+        // Initialize the app when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new MusicReferenceApp();
+        });
+    </script>
+</body>
+</html>
