@@ -202,7 +202,7 @@
 
         .terms-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 20px;
         }
 
@@ -371,8 +371,24 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
             .header h1 {
-                font-size: 2em;
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 1em;
             }
             
             .search-container {
@@ -382,31 +398,47 @@
             .learning-options {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 15px;
+                gap: 20px;
             }
             
             .mode-selector {
-                justify-content: center;
+                flex-direction: column;
+                gap: 10px;
             }
             
             .category-filters {
-                justify-content: flex-start;
+                justify-content: center;
             }
             
             .terms-grid {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
             
             .controls {
-                padding: 20px;
+                padding: 20px 15px;
             }
             
             .content {
-                padding: 20px;
+                padding: 20px 15px;
+            }
+
+            .term-name {
+                font-size: 1.2em;
+            }
+
+            .term-meaning {
+                font-size: 1em;
             }
             
             .difficulty-selector {
-                justify-content: center;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .difficulty-selector select {
+                text-align: center;
             }
             
             .mode-btn {
