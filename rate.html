@@ -467,20 +467,38 @@
         }
 
         /* Mobile Layout Fix for Rate Item Lists */
-        @media (max-width: 580px) {
-            ul.rate-list li {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-                padding: 12px 0;
-            }
+@media (max-width: 580px) {
+    ul.rate-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 12px 0;
+    }
 
-            ul.rate-list li span:last-child {
-                margin-left: 0;
-                white-space: normal;
-                font-size: 1rem;
-            }
-        }
+    .item-label {
+        display: flex;
+        flex-direction: column; /* Stacks title and tag neatly without stretching */
+        align-items: flex-start;
+        gap: 4px;
+        width: 100%;
+    }
+
+    .tag {
+        font-size: 0.65rem; /* Reduces badge font size for mobile screens */
+        padding: 2px 7px;   /* Tightens badge padding */
+        display: inline-block;
+        width: fit-content; /* Prevents badge from expanding into a giant block */
+        line-height: 1.3;
+    }
+
+    ul.rate-list li span:last-child {
+        margin-left: 0;
+        white-space: normal;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+}
 
         /* Print Stylesheet for PDF Export */
         @media print {
