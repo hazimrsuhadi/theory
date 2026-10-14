@@ -14,6 +14,9 @@
             --light-bg: #f8fafc;
             --border-color: #e2e8f0;
             --container-max-width: 820px;
+            --notice-bg: #fffaf0;
+            --notice-border: #dd6b20;
+            --notice-text: #9c4221;
         }
 
         * {
@@ -41,7 +44,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         header h1 {
@@ -64,7 +67,53 @@
             font-style: italic;
         }
 
-        /* Sticky Navigation Bar with Glassmorphism Elevation */
+/* ANNOUNCEMENT BANNER STYLING */
+.announcement-banner {
+    background-color: var(--notice-bg);
+    border: 1px solid #feebc8;
+    border-left: 5px solid var(--notice-border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center; /* Aligns text and close button vertically */
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+}
+
+.announcement-content {
+    flex: 1; /* Expands text container across the full banner width */
+    font-size: 0.92rem;
+    color: var(--notice-text);
+    line-height: 1.6;
+}
+
+.announcement-content strong {
+    display: inline; /* Keeps title flowing smoothly with the sentence */
+    font-weight: 700;
+}
+
+.close-banner-btn {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #a0aec0;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    flex-shrink: 0; /* Prevents button from being compressed */
+}
+
+.close-banner-btn:hover {
+    color: var(--notice-border);
+    background-color: rgba(221, 107, 32, 0.1);
+}
+
+        /* Sticky Navigation Bar */
         .quick-nav {
             display: flex;
             justify-content: center;
@@ -95,13 +144,13 @@
             transition: all 0.2s ease;
         }
 
-        .quick-nav a:hover {
+        .quick-nav a:hover, .quick-nav a:focus {
             background-color: var(--primary-color);
             color: #ffffff;
             border-color: var(--primary-color);
+            outline: none;
         }
 
-        /* Section Headings & Scroll Margins */
         section {
             scroll-margin-top: 80px;
         }
@@ -117,7 +166,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Card Container Styling for Service Categories */
         .service-category {
             background: #ffffff;
             border: 1px solid var(--border-color);
@@ -183,7 +231,7 @@
             letter-spacing: 0.4px;
         }
 
-        /* Interactive Calculator Styling */
+        /* Interactive Calculator */
         .calc-box {
             background-color: #ffffff;
             border: 1px solid var(--border-color);
@@ -220,6 +268,13 @@
             font-size: 0.95rem;
             background-color: #ffffff;
             color: var(--text-color);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .calc-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.15);
         }
 
         .calc-checkbox {
@@ -266,7 +321,26 @@
             color: var(--primary-color);
         }
 
-        /* Action Buttons Layout Prioritization */
+        .calc-note {
+            font-size: 0.82rem;
+            color: #718096;
+            margin-top: 8px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .booking-status-badge {
+            margin-top: 12px;
+            padding: 10px;
+            background-color: var(--notice-bg);
+            border: 1px solid #feebc8;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--notice-text);
+            text-align: center;
+            font-weight: 600;
+        }
+
         .cta-group {
             display: flex;
             gap: 12px;
@@ -297,9 +371,10 @@
             box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);
         }
 
-        .btn-wa:hover {
+        .btn-wa:hover, .btn-wa:focus {
             background-color: var(--wa-green-hover);
             transform: translateY(-1px);
+            outline: none;
         }
 
         .btn-email {
@@ -309,13 +384,13 @@
             border: 1.5px solid var(--primary-color);
         }
 
-        .btn-email:hover {
+        .btn-email:hover, .btn-email:focus {
             background-color: var(--primary-color);
             color: #ffffff;
             transform: translateY(-1px);
+            outline: none;
         }
 
-        /* Information & Contact Grid */
         .info-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -390,6 +465,24 @@
             margin-left: 6px;
             display: none;
         }
+
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+            .quick-nav, .calc-box, .cta-group, .announcement-banner {
+                display: none !important;
+            }
+            .container {
+                max-width: 100%;
+            }
+            .service-category, .info-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
@@ -401,8 +494,17 @@
         <p class="effective-date">(Effective January 2027)</p>
     </header>
 
+<!-- INTERACTIVE ANNOUNCEMENT BANNER -->
+<div id="booking-announcement" class="announcement-banner" style="display: none;">
+    <div class="announcement-content">
+        <strong>📅 Current Availability Notice:</strong>
+        Schedule is fully booked until <strong>January 24, 2027</strong>. Inquiries and bookings for <strong>January 25, 2027 onwards</strong> remain welcome!
+    </div>
+    <button type="button" class="close-banner-btn" onclick="dismissBanner()" title="Dismiss announcement">✕</button>
+</div>
+
     <!-- STICKY NAVIGATION BAR -->
-    <nav class="quick-nav">
+    <nav class="quick-nav" aria-label="Quick navigation">
         <a href="#rates">Service Rates</a>
         <a href="#estimator">Fee Estimator</a>
         <a href="#policies">Terms & Policies</a>
@@ -602,7 +704,7 @@
             <span>Booked with less than 48 hours' notice? (+50% short-notice surcharge)</span>
         </label>
 
-        <div class="calc-result">
+        <div class="calc-result" aria-live="polite">
             <div class="calc-result-row">
                 <span>Base Service Fee:</span>
                 <span id="base-fee-display">Rp 0</span>
@@ -614,6 +716,10 @@
             <div class="calc-result-total">
                 <span>Estimated Total:</span>
                 <span id="total-fee-display">Rp 0</span>
+            </div>
+            <div id="calc-note" class="calc-note"></div>
+            <div id="booking-badge" class="booking-status-badge" style="display: none;">
+                ⚠️ Booking Note: Currently accepting engagements starting from <u>January 25, 2027 onwards</u>.
             </div>
 
             <div class="cta-group">
@@ -660,6 +766,56 @@
 </div>
 
 <script>
+    // ==========================================
+    // AVAILABILITY TOGGLE SWITCH
+    // Change this to 'false' when accepting immediate bookings again.
+    // ==========================================
+    const IS_FULLY_BOOKED = true;
+
+    // Centralized Rates Configuration
+    const RATES = {
+        piano_g15: 820000,
+        piano_g68: 950000,
+        piano_dip: 1150000,
+        theory_g15: 580000,
+        theory_g68: 720000,
+        theory_dip: 880000,
+        masterclass_30: 420000,
+        masterclass_60: 700000,
+        exam_comp: 650000,
+        recital_short: 430000,
+        guest_call: 1280000,
+        recital_half: 1280000,
+        recital_full: 2550000,
+        comp_half: 1800000,
+        comp_full: 3200000,
+        rehearsal_hourly: 390000,
+        showcase_solo: 250000,
+        showcase_duet: 380000,
+        showcase_min_call: 1280000,
+        recording_nonpro: 390000,
+        recording_pro: 650000,
+        transcription_page: 65000,
+        transcription_staff: 18000
+    };
+
+    function initBookingStatus() {
+        const banner = document.getElementById('booking-announcement');
+        const badge = document.getElementById('booking-badge');
+        
+        if (IS_FULLY_BOOKED) {
+            banner.style.display = 'flex';
+            badge.style.display = 'block';
+        } else {
+            banner.style.display = 'none';
+            badge.style.display = 'none';
+        }
+    }
+
+    function dismissBanner() {
+        document.getElementById('booking-announcement').style.display = 'none';
+    }
+
     function formatIDR(amount) {
         return 'Rp ' + amount.toLocaleString('id-ID') + ',00';
     }
@@ -721,32 +877,51 @@
         const isRush = document.getElementById('rush-fee').checked;
 
         let baseFee = 0;
+        let noteText = '';
+        let detailsText = '';
 
         switch (service) {
-            case 'piano_g15': baseFee = 820000 * val1; break;
-            case 'piano_g68': baseFee = 950000 * val1; break;
-            case 'piano_dip': baseFee = 1150000 * val1; break;
-            case 'theory_g15': baseFee = 580000 * val1; break;
-            case 'theory_g68': baseFee = 720000 * val1; break;
-            case 'theory_dip': baseFee = 880000 * val1; break;
-            case 'masterclass_30': baseFee = 420000 * val1; break;
-            case 'masterclass_60': baseFee = 700000 * val1; break;
-            case 'exam_comp': baseFee = (650000 * val1) + (390000 * val2); break;
-            case 'recital_short': baseFee = (430000 * val1) + (390000 * val2); break;
-            case 'guest_call': baseFee = (1280000 * val1) + (390000 * val2); break;
-            case 'comp_half': baseFee = (1800000 * val1) + (390000 * val2); break;
-            case 'comp_full': baseFee = (3200000 * val1) + (390000 * val2); break;
-            case 'recital_half': baseFee = (1280000 * val1) + (390000 * val2); break;
-            case 'recital_full': baseFee = (2550000 * val1) + (390000 * val2); break;
-            case 'showcase': {
-                const itemTotal = (val1 * 250000) + (val2 * 380000);
-                baseFee = (val1 + val2 === 0) ? 0 : Math.max(1280000, itemTotal);
-                break;
-            }
-            case 'rehearsal_only': baseFee = 390000 * val1; break;
-            case 'recording_nonpro': baseFee = 390000 * val1; break;
-            case 'recording_pro': baseFee = 650000 * val1; break;
-            case 'transcription': baseFee = (65000 + (18000 * val2)) * val1; break;
+            case 'piano_g15': baseFee = RATES.piano_g15 * val1; detailsText = `${val1} lesson(s)`; break;
+            case 'piano_g68': baseFee = RATES.piano_g68 * val1; detailsText = `${val1} lesson(s)`; break;
+            case 'piano_dip': baseFee = RATES.piano_dip * val1; detailsText = `${val1} lesson(s)`; break;
+            case 'theory_g15': baseFee = RATES.theory_g15 * val1; detailsText = `${val1} lesson(s)`; break;
+            case 'theory_g68': baseFee = RATES.theory_g68 * val1; detailsText = `${val1} lesson(s)`; break;
+            case 'theory_dip': baseFee = RATES.theory_dip * val1; detailsText = `${val1} lesson(s)`; break;
+            case 'masterclass_30': baseFee = RATES.masterclass_30 * val1; detailsText = `${val1} session(s)`; break;
+            case 'masterclass_60': baseFee = RATES.masterclass_60 * val1; detailsText = `${val1} session(s)`; break;
+            case 'exam_comp': baseFee = (RATES.exam_comp * val1) + (RATES.rehearsal_hourly * val2); detailsText = `${val1} call(s), ${val2} reh hr(s)`; break;
+            case 'recital_short': baseFee = (RATES.recital_short * val1) + (RATES.rehearsal_hourly * val2); detailsText = `${val1} call(s), ${val2} reh hr(s)`; break;
+            case 'guest_call': baseFee = (RATES.guest_call * val1) + (RATES.rehearsal_hourly * val2); detailsText = `${val1} call(s), ${val2} reh hr(s)`; break;
+            case 'comp_half': baseFee = (RATES.comp_half * val1) + (RATES.rehearsal_hourly * val2); detailsText = `${val1} call(s), ${val2} reh hr(s)`; break;
+            case 'comp_full': baseFee = (RATES.comp_full * val1) + (RATES.rehearsal_hourly * val2); detailsText = `${val1} call(s), ${val2} reh hr(s)`; break;
+            case 'recital_half': baseFee = (RATES.recital_half * val1) + (RATES.rehearsal_hourly * val2); detailsText = `${val1} call(s), ${val2} reh hr(s)`; break;
+            case 'recital_full': baseFee = (RATES.recital_full * val1) + (RATES.rehearsal_hourly * val2); detailsText = `${val1} call(s), ${val2} extra reh hr(s)`; break;
+case 'showcase': {
+    const totalItems = val1 + val2;
+    const rawTotal = (val1 * RATES.showcase_solo) + (val2 * RATES.showcase_duet);
+    detailsText = `${val1} Solo Item(s), ${val2} Duet/Ensemble Item(s)`;
+
+    if (totalItems === 0) {
+        baseFee = 0;
+        noteText = 'Please enter at least 1 solo or ensemble item.';
+    } else {
+        // Enforce the minimum call floor so total never drops below Rp 1.280.000
+        baseFee = Math.max(RATES.showcase_min_call, rawTotal);
+
+        if (rawTotal < RATES.showcase_min_call) {
+            noteText = `Breakdown: ${val1} solo item(s) + ${val2} duet/ensemble item(s) = ${formatIDR(rawTotal)} → Standard Minimum Event Call Floor (${formatIDR(RATES.showcase_min_call)}) applied.`;
+        } else if (totalItems >= 5) {
+            noteText = `Breakdown: ${val1} solo item(s) + ${val2} duet/ensemble item(s) = ${formatIDR(rawTotal)}. Minimum Event Call Floor waived (5+ items booked).`;
+        } else {
+            noteText = `Breakdown: ${val1} solo item(s) + ${val2} duet/ensemble item(s) = ${formatIDR(rawTotal)}.`;
+        }
+    }
+    break;
+}
+            case 'rehearsal_only': baseFee = RATES.rehearsal_hourly * val1; detailsText = `${val1} hr(s)`; break;
+            case 'recording_nonpro': baseFee = RATES.recording_nonpro * val1; detailsText = `${val1} hr(s)`; break;
+            case 'recording_pro': baseFee = RATES.recording_pro * val1; detailsText = `${val1} hr(s)`; break;
+            case 'transcription': baseFee = (RATES.transcription_page + (RATES.transcription_staff * val2)) * val1; detailsText = `${val1} page(s), ${val2} extra staff/page`; break;
         }
 
         let rushFee = isRush ? baseFee * 0.5 : 0;
@@ -759,15 +934,20 @@
         document.getElementById('base-fee-display').textContent = baseText;
         document.getElementById('rush-fee-display').textContent = rushText;
         document.getElementById('total-fee-display').textContent = totalText;
+        document.getElementById('calc-note').textContent = noteText;
 
         document.getElementById('rush-row').style.display = isRush ? 'flex' : 'none';
 
-        // Update WhatsApp and Email Action Links
-        let messageString = `Hi Hazim, I calculated an estimate on your website for "${serviceText}" totaling ${totalText}.`;
+        // Pre-filled WhatsApp / Email message string
+        let messageString = `Hi Hazim, I calculated an estimate on your website for "${serviceText}" [Details: ${detailsText}] totaling ${totalText}.`;
         if (isRush) {
             messageString += ` (Includes short-notice fee).`;
         }
-        messageString += ` I would like to check your availability for this.`;
+        if (IS_FULLY_BOOKED) {
+            messageString += ` I saw that you are fully booked until mid-January 2027, and I would like to inquire for late January 2027 onwards.`;
+        } else {
+            messageString += ` I would like to check your availability for this.`;
+        }
 
         const encodedMsg = encodeURIComponent(messageString);
         document.getElementById('wa-cta').href = `https://wa.me/6281290570279?text=${encodedMsg}`;
@@ -782,7 +962,10 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', updateCalculatorUI);
+    document.addEventListener('DOMContentLoaded', () => {
+        initBookingStatus();
+        updateCalculatorUI();
+    });
 </script>
 
 </body>
