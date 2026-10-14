@@ -148,7 +148,7 @@
         ul.rate-list li {
             display: flex;
             justify-content: space-between;
-            align-items: baseline; /* Prevents text wrapping misalignment on mobile */
+            align-items: baseline;
             padding: 10px 0;
             border-bottom: 1px solid var(--border-color);
             font-size: 0.95rem;
@@ -291,7 +291,7 @@
         }
 
         .btn-wa {
-            flex: 2; /* Primary CTA emphasis */
+            flex: 2;
             background-color: var(--wa-green);
             color: #ffffff;
             box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);
@@ -303,7 +303,7 @@
         }
 
         .btn-email {
-            flex: 1; /* Secondary outline style */
+            flex: 1;
             background-color: transparent;
             color: var(--primary-color);
             border: 1.5px solid var(--primary-color);
@@ -446,16 +446,20 @@
         </div>
 
         <div class="service-category">
-            <h3>Multi-Performer Showcases & Galas (3+ Performers)</h3>
-            <p class="micro-desc">Includes dedicated 15–20 minute individual rehearsal slot per soloist prior to concert day.</p>
+            <h3>Multi-Performer Showcases & Galas</h3>
+            <p class="micro-desc">For studio recitals and multi-soloist showcases. Minimum event call fee is waived when 5+ items are booked.</p>
             <ul class="rate-list">
                 <li>
-                    <span class="item-label">Per-Singer / Per-Soloist Fee <span class="tag">Incl. Rehearsal Slot</span></span>
-                    <span>Rp 250.000,00</span>
+                    <span class="item-label">Solo Item <span class="tag">Incl. up to 20 min Rehearsal</span></span>
+                    <span>Rp 250.000,00 / soloist</span>
                 </li>
                 <li>
-                    <span class="item-label">Full Day / Production Project Rate</span>
-                    <span>Custom Quote</span>
+                    <span class="item-label">Duet / Ensemble Item <span class="tag">Incl. up to 25 min Joint Rehearsal</span></span>
+                    <span>Rp 380.000,00 / item</span>
+                </li>
+                <li>
+                    <span class="item-label">Minimum Showcase Event Call <span class="tag">Waived at 5+ items</span></span>
+                    <span>Rp 1.280.000,00</span>
                 </li>
             </ul>
         </div>
@@ -559,7 +563,7 @@
                     <option value="guest_call">Guest Call / Partial Standby Call</option>
                     <option value="recital_half">Half Recital (up to 30 mins music)</option>
                     <option value="recital_full">Full Recital (up to 60 mins music)</option>
-                    <option value="showcase">Multi-Performer Showcase / Gala</option>
+                    <option value="showcase">Multi-Performer Showcase / Gala (Min. call waived at 5+ items)</option>
                 </optgroup>
                 <optgroup label="Competitions & Exams">
                     <option value="exam_comp">Solo Exam / Solo Competition Call</option>
@@ -585,7 +589,7 @@
 
         <div class="calc-group" id="input1-group">
             <label id="input1-label" for="input1">Quantity / Sessions</label>
-            <input type="number" id="input1" class="calc-control" value="1" min="1" oninput="calculateTotal()">
+            <input type="number" id="input1" class="calc-control" value="1" min="0" oninput="calculateTotal()">
         </div>
 
         <div class="calc-group" id="input2-group">
@@ -633,7 +637,7 @@
                 <li><strong>Minimum Concert Call:</strong> Events requiring venue call or standby time are billed at the minimum call rate (Rp 1.280.000) to cover event lockout.</li>
                 <li><strong>Choir Competitions & Festivals:</strong> Billed on a Half-Day (up to 4 hrs) or Full-Day (up to 8 hrs) block basis. Out-of-town or multi-day festival engagements are billed at a daily rate of Rp 3.000.000,00 – Rp 3.500.000,00, with travel, lodging, and per diem covered by the hiring ensemble.</li>
                 <li><strong>Extended Packages:</strong> Projects requiring more than 5 rehearsal hours are eligible for customized package pricing.</li>
-                <li><strong>Multi-Soloist Showcases:</strong> Concerts featuring 3+ soloists are billed per performer or via custom full-day production rates.</li>
+                <li><strong>Multi-Soloist Showcases:</strong> Billed at Rp 250.000 per soloist (or Rp 380.000 per duet/ensemble piece). Engagements with fewer than 5 items are subject to the standard Minimum Concert Call floor of Rp 1.280.000, which is automatically waived when 5 or more items are booked.</li>
             </ul>
         </div>
 
@@ -643,11 +647,11 @@
             <p><strong>WhatsApp:</strong> <a href="https://wa.me/6281290570279" target="_blank" rel="noopener" class="contact-link">0812-9057-0279</a></p>
             <br>
             <p><strong>Direct Bank Transfer:</strong></p>
-            <p>• Bank Mandiri: 
+            <p>Bank Mandiri: 
                 <code class="copy-code" onclick="copyText('1020006188715', 'mandiri-toast')">1020006188715 📋</code>
                 <span id="mandiri-toast" class="copy-toast">Copied!</span>
             </p>
-            <p>• BCA Digital (blu): 
+            <p>BCA Digital (blu): 
                 <code class="copy-code" onclick="copyText('005116831490', 'bca-toast')">005116831490 📋</code>
                 <span id="bca-toast" class="copy-toast">Copied!</span>
             </p>
@@ -688,9 +692,9 @@
             if (parseInt(input1.value) < 1) input1.value = 1;
         } else if (service === 'showcase') {
             input1Group.style.display = 'block';
-            input2Group.style.display = 'none';
-            input1Label.textContent = 'Number of Performers / Soloists';
-            if (parseInt(input1.value) < 1) input1.value = 3;
+            input2Group.style.display = 'block';
+            input1Label.textContent = 'Number of Solo Items (Rp 250.000 / soloist)';
+            input2Label.textContent = 'Number of Duet / Ensemble Items (Rp 380.000 / item)';
         } else if (['rehearsal_only', 'recording_nonpro', 'recording_pro'].includes(service)) {
             input1Group.style.display = 'block';
             input2Group.style.display = 'none';
@@ -734,7 +738,11 @@
             case 'comp_full': baseFee = (3200000 * val1) + (390000 * val2); break;
             case 'recital_half': baseFee = (1280000 * val1) + (390000 * val2); break;
             case 'recital_full': baseFee = (2550000 * val1) + (390000 * val2); break;
-            case 'showcase': baseFee = 250000 * val1; break;
+            case 'showcase': {
+                const itemTotal = (val1 * 250000) + (val2 * 380000);
+                baseFee = (val1 + val2 === 0) ? 0 : Math.max(1280000, itemTotal);
+                break;
+            }
             case 'rehearsal_only': baseFee = 390000 * val1; break;
             case 'recording_nonpro': baseFee = 390000 * val1; break;
             case 'recording_pro': baseFee = 650000 * val1; break;
