@@ -11,7 +11,7 @@
             --wa-green: #25d366;
             --wa-green-hover: #1da851;
             --text-color: #2d3748;
-            --light-bg: #f7fafc;
+            --light-bg: #f8fafc;
             --border-color: #e2e8f0;
             --container-max-width: 820px;
         }
@@ -30,7 +30,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: var(--text-color);
             line-height: 1.6;
-            background-color: #ffffff;
+            background-color: #f7fafc;
             padding: 24px 16px 48px;
         }
 
@@ -41,36 +41,46 @@
 
         header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         header h1 {
             font-size: 2.2rem;
             color: var(--primary-color);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             letter-spacing: -0.5px;
         }
 
-        header p {
-            font-size: 1rem;
-            color: #718096;
-            font-weight: 500;
+        header .subtitle {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 4px;
         }
 
-        /* Quick Navigation Bar */
+        header .effective-date {
+            font-size: 0.88rem;
+            color: #718096;
+            font-style: italic;
+        }
+
+        /* Sticky Navigation Bar with Glassmorphism Elevation */
         .quick-nav {
             display: flex;
             justify-content: center;
             gap: 10px;
             flex-wrap: wrap;
             margin-bottom: 32px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid var(--primary-color);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: 0 0 12px 12px;
             z-index: 100;
-            padding-top: 12px;
         }
 
         .quick-nav a {
@@ -91,10 +101,15 @@
             border-color: var(--primary-color);
         }
 
+        /* Section Headings & Scroll Margins */
+        section {
+            scroll-margin-top: 80px;
+        }
+
         .section-title {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             color: var(--primary-color);
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--primary-color);
             padding-bottom: 6px;
             margin-top: 36px;
             margin-bottom: 20px;
@@ -102,20 +117,26 @@
             letter-spacing: 0.5px;
         }
 
+        /* Card Container Styling for Service Categories */
         .service-category {
-            margin-bottom: 24px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
 
         .service-category h3 {
-            font-size: 1.05rem;
-            color: #2d3748;
+            font-size: 1.08rem;
+            color: var(--primary-color);
             margin-bottom: 2px;
         }
 
         .micro-desc {
             font-size: 0.85rem;
             color: #718096;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-style: italic;
         }
 
@@ -127,16 +148,20 @@
         ul.rate-list li {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px dashed var(--border-color);
+            align-items: baseline; /* Prevents text wrapping misalignment on mobile */
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
             font-size: 0.95rem;
+        }
+
+        ul.rate-list li:last-child {
+            border-bottom: none;
         }
 
         ul.rate-list li span:last-child {
             font-weight: 600;
             color: var(--primary-color);
-            margin-left: 12px;
+            margin-left: 16px;
             white-space: nowrap;
         }
 
@@ -148,31 +173,30 @@
         }
 
         .tag {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            background-color: #e2e8f0;
-            color: #4a5568;
-            padding: 2px 7px;
-            border-radius: 4px;
+            background-color: #edf2f7;
+            color: var(--accent-color);
+            padding: 3px 8px;
+            border-radius: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
         }
 
-        /* Fee Calculator Styling */
+        /* Interactive Calculator Styling */
         .calc-box {
-            background-color: var(--light-bg);
+            background-color: #ffffff;
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 28px;
             margin: 40px 0;
-            scroll-margin-top: 70px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.06);
         }
 
         .calc-box h2 {
             font-size: 1.3rem;
             color: var(--primary-color);
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
@@ -217,10 +241,10 @@
         .calc-result {
             margin-top: 24px;
             padding: 20px;
-            background-color: #ffffff;
-            border: 1px solid #cbd5e0;
+            background-color: var(--light-bg);
+            border: 1px solid var(--border-color);
             border-left: 5px solid var(--accent-color);
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         .calc-result-row {
@@ -238,11 +262,11 @@
             padding-top: 12px;
             border-top: 2px solid var(--border-color);
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             color: var(--primary-color);
         }
 
-        /* Call To Action Buttons inside Calculator */
+        /* Action Buttons Layout Prioritization */
         .cta-group {
             display: flex;
             gap: 12px;
@@ -251,9 +275,8 @@
         }
 
         .btn-cta {
-            flex: 1;
-            min-width: 220px;
-            min-height: 44px;
+            min-width: 200px;
+            min-height: 46px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -263,13 +286,15 @@
             font-weight: 600;
             font-size: 0.95rem;
             text-decoration: none;
-            transition: background-color 0.2s ease, transform 0.1s ease;
+            transition: all 0.2s ease;
             text-align: center;
         }
 
         .btn-wa {
+            flex: 2; /* Primary CTA emphasis */
             background-color: var(--wa-green);
             color: #ffffff;
+            box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);
         }
 
         .btn-wa:hover {
@@ -278,22 +303,25 @@
         }
 
         .btn-email {
-            background-color: var(--primary-color);
-            color: #ffffff;
+            flex: 1; /* Secondary outline style */
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1.5px solid var(--primary-color);
         }
 
         .btn-email:hover {
-            background-color: var(--accent-color);
+            background-color: var(--primary-color);
+            color: #ffffff;
             transform: translateY(-1px);
         }
 
-        /* Policy & Contact Blocks */
+        /* Information & Contact Grid */
         .info-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 24px;
             margin-top: 36px;
-            scroll-margin-top: 70px;
+            scroll-margin-top: 80px;
         }
 
         @media (min-width: 640px) {
@@ -303,10 +331,11 @@
         }
 
         .info-card {
-            background-color: var(--light-bg);
+            background-color: #ffffff;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 22px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
 
         .info-card h3 {
@@ -337,13 +366,29 @@
             text-decoration: underline;
         }
 
-        code {
-            background-color: #e2e8f0;
-            padding: 2px 6px;
+        code.copy-code {
+            background-color: #edf2f7;
+            padding: 3px 8px;
             border-radius: 4px;
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
             font-size: 0.88rem;
             color: var(--primary-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        code.copy-code:hover {
+            background-color: #e2e8f0;
+        }
+
+        .copy-toast {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            margin-left: 6px;
+            display: none;
         }
     </style>
 </head>
@@ -352,10 +397,11 @@
 <div class="container">
     <header>
         <h1>Rate Sheet</h1>
-        <p>(Effective January 2027)</p>
+        <p class="subtitle">Hazim Suhadi — Pianist, Accompanist & Music Educator</p>
+        <p class="effective-date">(Effective January 2027)</p>
     </header>
 
-    <!-- QUICK JUMP NAVIGATION -->
+    <!-- STICKY NAVIGATION BAR -->
     <nav class="quick-nav">
         <a href="#rates">Service Rates</a>
         <a href="#estimator">Fee Estimator</a>
@@ -363,10 +409,8 @@
         <a href="#contact">Contact & Payment</a>
     </nav>
 
-    <div id="rates" style="scroll-margin-top: 70px;"></div>
-
     <!-- LIVE PERFORMANCE & ACCOMPANIMENT -->
-    <section>
+    <section id="rates">
         <h2 class="section-title">Live Performance & Accompaniment</h2>
 
         <div class="service-category">
@@ -417,7 +461,7 @@
         </div>
     </section>
 
-    <!-- COMPETITIONS & EXAMS (DEDICATED SECTION) -->
+    <!-- COMPETITIONS & EXAMS -->
     <section>
         <h2 class="section-title">Competitions & Exams</h2>
 
@@ -455,10 +499,10 @@
     <!-- MUSIC INSTRUCTION -->
     <section>
         <h2 class="section-title">Music Instruction</h2>
-        <p class="micro-desc" style="margin-top: -12px; margin-bottom: 16px;">Tiered by syllabus level studied during session. All lessons are 60 minutes.</p>
 
         <div class="service-category">
             <h3>Piano Lessons (60 mins)</h3>
+            <p class="micro-desc">Tiered by syllabus level studied during session.</p>
             <ul class="rate-list">
                 <li><span>Beginner to ABRSM Grade 5</span><span>Rp 820.000,00</span></li>
                 <li><span>ABRSM Grades 6–8 (Advanced)</span><span>Rp 950.000,00</span></li>
@@ -468,10 +512,11 @@
 
         <div class="service-category">
             <h3>Theory & Academic Lessons (60 mins)</h3>
+            <p class="micro-desc">Focusing on harmony, musicology, and Trinity/ABRSM examination analysis.</p>
             <ul class="rate-list">
                 <li><span>Core Theory (ABRSM Grades 1–5)</span><span>Rp 580.000,00</span></li>
                 <li><span>Advanced Theory & Harmony (ABRSM Grades 6–8)</span><span>Rp 720.000,00</span></li>
-                <li><span>Diploma Academic & Analysis (LMusTCL / AMusTCL )</span><span>Rp 880.000,00</span></li>
+                <li><span>Diploma Academic & Analysis (LMusTCL / AMusTCL)</span><span>Rp 880.000,00</span></li>
             </ul>
         </div>
     </section>
@@ -508,32 +553,32 @@
             <label for="service-type">Select Service Category</label>
             <select id="service-type" class="calc-control" onchange="updateCalculatorUI()">
                 <optgroup label="Live Performance & Accompaniment">
-                    <option value="masterclass_30">Master Class Accompaniment - 30 mins (Rp 420.000)</option>
-                    <option value="masterclass_60">Master Class Accompaniment - 60 mins (Rp 700.000)</option>
-                    <option value="recital_short">Short Recital - up to 10 mins music (Rp 430.000 fee)</option>
-                    <option value="guest_call">Guest Call / Partial Concert Standby (Rp 1.280.000 min call)</option>
-                    <option value="recital_half">Half Recital - up to 30 mins music (Rp 1.280.000 fee)</option>
-                    <option value="recital_full">Full Recital - up to 60 mins music (Rp 2.550.000 incl. 1 hr reh.)</option>
-                    <option value="showcase">Multi-Performer Showcase / Gala (Rp 250.000 / performer)</option>
+                    <option value="masterclass_30">Master Class Accompaniment (30 mins)</option>
+                    <option value="masterclass_60">Master Class Accompaniment (60 mins)</option>
+                    <option value="recital_short">Short Recital (up to 10 mins music)</option>
+                    <option value="guest_call">Guest Call / Partial Standby Call</option>
+                    <option value="recital_half">Half Recital (up to 30 mins music)</option>
+                    <option value="recital_full">Full Recital (up to 60 mins music)</option>
+                    <option value="showcase">Multi-Performer Showcase / Gala</option>
                 </optgroup>
                 <optgroup label="Competitions & Exams">
-                    <option value="exam_comp">Solo Exam / Solo Competition (Rp 650.000 call fee)</option>
-                    <option value="comp_half">Choral / Ensemble Competition: Half-Day Call (Rp 1.800.000)</option>
-                    <option value="comp_full">Choral / Ensemble Competition: Full-Day Call (Rp 3.200.000)</option>
+                    <option value="exam_comp">Solo Exam / Solo Competition Call</option>
+                    <option value="comp_half">Choral Competition: Half-Day Call</option>
+                    <option value="comp_full">Choral Competition: Full-Day Call</option>
                 </optgroup>
                 <optgroup label="Music Instruction">
-                    <option value="piano_g15">Piano: Beginner to Grade 5 (Rp 820.000 / lesson)</option>
-                    <option value="piano_g68">Piano: Grades 6–8 Advanced (Rp 950.000 / lesson)</option>
-                    <option value="piano_dip">Piano: Diploma / Tertiary Level (Rp 1.150.000 / lesson)</option>
-                    <option value="theory_g15">Theory: Core Grades 1–5 (Rp 580.000 / lesson)</option>
-                    <option value="theory_g68">Theory: Advanced Grades 6–8 (Rp 720.000 / lesson)</option>
-                    <option value="theory_dip">Theory: Diploma & Higher Analysis (Rp 880.000 / lesson)</option>
+                    <option value="piano_g15">Piano: Beginner to Grade 5</option>
+                    <option value="piano_g68">Piano: Advanced Grades 6–8</option>
+                    <option value="piano_dip">Piano: Diploma / Tertiary Level</option>
+                    <option value="theory_g15">Theory: Core Grades 1–5</option>
+                    <option value="theory_g68">Theory: Advanced Grades 6–8</option>
+                    <option value="theory_dip">Theory: Diploma & Higher Analysis</option>
                 </optgroup>
                 <optgroup label="Studio & Services">
-                    <option value="rehearsal_only">Rehearsal Pianist (Rp 390.000 / hour)</option>
-                    <option value="recording_nonpro">Recording: Home / Non-Pro Studio (Rp 390.000 / hour)</option>
-                    <option value="recording_pro">Recording: Professional Studio (Rp 650.000 / hour)</option>
-                    <option value="transcription">Music Transcription (Rp 65.000 / page up to 3 staves)</option>
+                    <option value="rehearsal_only">Rehearsal Pianist</option>
+                    <option value="recording_nonpro">Recording: Home / Non-Pro Studio</option>
+                    <option value="recording_pro">Recording: Professional Studio</option>
+                    <option value="transcription">Music Transcription</option>
                 </optgroup>
             </select>
         </div>
@@ -585,9 +630,9 @@
             <ul>
                 <li><strong>Short-Notice Booking:</strong> Engagements requested with under 48 hours' notice incur a 50% surcharge.</li>
                 <li><strong>Travel & Location:</strong> In-person calls within DKI Jakarta are billed round-trip at standard ride-hailing rates.</li>
-                <li><strong>Minimum Concert Call:</strong> Events requiring venue call or standby time (e.g. accompanying 1–3 pieces in a full choir concert) are billed at the minimum call rate (Rp 1.280.000) to cover event lockout.</li>
-                <li><strong>Choir Competitions & Festivals:</strong> Billed on a Half-Day (up to 4 hrs) or Full-Day (up to 8 hrs) block basis. Out-of-town or multi-day festival engagements are billed at a daily rate of Rp 3.000.000,00 – Rp 3.500.000,00, with travel, private lodging, and per diem covered by the hiring ensemble.</li>
-                <li><strong>Extended Rehearsal Packages:</strong> Projects requiring more than 5 rehearsal hours are eligible for customized package pricing.</li>
+                <li><strong>Minimum Concert Call:</strong> Events requiring venue call or standby time are billed at the minimum call rate (Rp 1.280.000) to cover event lockout.</li>
+                <li><strong>Choir Competitions & Festivals:</strong> Billed on a Half-Day (up to 4 hrs) or Full-Day (up to 8 hrs) block basis. Out-of-town or multi-day festival engagements are billed at a daily rate of Rp 3.000.000,00 – Rp 3.500.000,00, with travel, lodging, and per diem covered by the hiring ensemble.</li>
+                <li><strong>Extended Packages:</strong> Projects requiring more than 5 rehearsal hours are eligible for customized package pricing.</li>
                 <li><strong>Multi-Soloist Showcases:</strong> Concerts featuring 3+ soloists are billed per performer or via custom full-day production rates.</li>
             </ul>
         </div>
@@ -598,8 +643,14 @@
             <p><strong>WhatsApp:</strong> <a href="https://wa.me/6281290570279" target="_blank" rel="noopener" class="contact-link">0812-9057-0279</a></p>
             <br>
             <p><strong>Direct Bank Transfer:</strong></p>
-            <p>• Bank Mandiri: <code>1020006188715</code></p>
-            <p>• BCA Digital (blu): <code>005116831490</code></p>
+            <p>• Bank Mandiri: 
+                <code class="copy-code" onclick="copyText('1020006188715', 'mandiri-toast')">1020006188715 📋</code>
+                <span id="mandiri-toast" class="copy-toast">Copied!</span>
+            </p>
+            <p>• BCA Digital (blu): 
+                <code class="copy-code" onclick="copyText('005116831490', 'bca-toast')">005116831490 📋</code>
+                <span id="bca-toast" class="copy-toast">Copied!</span>
+            </p>
         </div>
     </div>
 </div>
@@ -659,7 +710,7 @@
     function calculateTotal() {
         const serviceSelect = document.getElementById('service-type');
         const service = serviceSelect.value;
-        const serviceText = serviceSelect.options[serviceSelect.selectedIndex].text.split('(')[0].trim();
+        const serviceText = serviceSelect.options[serviceSelect.selectedIndex].text;
 
         const val1 = Math.max(0, parseInt(document.getElementById('input1').value) || 0);
         const val2 = Math.max(0, parseInt(document.getElementById('input2').value) || 0);
@@ -713,6 +764,14 @@
         const encodedMsg = encodeURIComponent(messageString);
         document.getElementById('wa-cta').href = `https://wa.me/6281290570279?text=${encodedMsg}`;
         document.getElementById('email-cta').href = `mailto:hazim.r.suhadi@gmail.com?subject=${encodeURIComponent("Inquiry: " + serviceText)}&body=${encodedMsg}`;
+    }
+
+    function copyText(text, toastId) {
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = document.getElementById(toastId);
+            toast.style.display = 'inline';
+            setTimeout(() => { toast.style.display = 'none'; }, 2000);
+        });
     }
 
     document.addEventListener('DOMContentLoaded', updateCalculatorUI);
